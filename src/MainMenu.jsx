@@ -17,8 +17,10 @@ class MainMenu extends Component {
 
 	componentDidMount() {
 		console.log("MainMenu Component mounted");
+		var {jwt} = store.getState().user;
+		console.log(jwt);
 
-		this.setState({ latest100: getLast100Issues() });
+		this.setState({ latest100: getLast100Issues(store.getState().user) });
 		console.log(this.state);
 	}
 

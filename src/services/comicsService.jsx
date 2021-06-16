@@ -1,12 +1,12 @@
-export default async function getLast100Issues() {
-	console.log("getLast100Issues");
+export default async function getLast100Issues({jwt}) {
+	console.log("getLast100Issues. token: " + jwt);
 
 	const response = await fetch("http://localhost:8080/comic/latest100", {
 		method: "GET",
 		headers: {
 			Accept: "application/json",
 			"Content-Type": "application/json",
-			"Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyeWFuIiwiZXhwIjoxNjIyMjcwODM4LCJpYXQiOjE2MjIyMzQ4Mzh9.PQEkTVZZG7TOZSalZ7LPjTv-DYGggiBgNO5AoYJ9Ek8"
+			"Authorization": "Bearer " + jwt
 		},
 	});
 	const responseJson = await response.json();
@@ -15,7 +15,7 @@ export default async function getLast100Issues() {
 	return responseJson;
 }
 
-export async function getOneIssue(id) {
+export async function getOneIssue(id, {jwt}) {
 	console.log("getOneIssue");
 
 	const response = await fetch("http://localhost:8080/comic/"+id, {
@@ -23,7 +23,7 @@ export async function getOneIssue(id) {
 		headers: {
 			Accept: "application/json",
 			"Content-Type": "application/json",
-			"Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyeWFuIiwiZXhwIjoxNjIyMjcwODM4LCJpYXQiOjE2MjIyMzQ4Mzh9.PQEkTVZZG7TOZSalZ7LPjTv-DYGggiBgNO5AoYJ9Ek8"
+			"Authorization": "Bearer " + jwt
 		},
 	});
 	const responseJson = await response.json();
