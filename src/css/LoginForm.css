@@ -1,0 +1,37 @@
+.mainDiv {
+  background-color: black;
+  height: 100vh;
+}
+
+.inputs {
+  margin: auto;
+  font: inherit;
+  color: white;
+  width: 30%;
+  border: 0;
+  height: 1.1876em;
+  display: block;
+  padding: 6px 0 7px;
+  min-width: 0;
+  background: none;
+  box-sizing: content-box;
+  animation-name: mui-auto-fill-cancel;
+  letter-spacing: inherit;
+  animation-duration: 10ms;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mainMenuDiv {
+  border-style: solid;
+  border-width: thick;
+  border-color: red;
+  height: 50vh;
+}
+
+.bottom-container {
+  border-style: solid;
+  border-width: thick;
+  border-color: red;
+  width: 50%;
+  height: 50vh;
+}

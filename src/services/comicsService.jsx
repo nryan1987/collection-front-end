@@ -1,4 +1,4 @@
-export default async function getLast100Issues({jwt}) {
+export default async function getLast100Issues(jwt) {
 	console.log("getLast100Issues. token: " + jwt);
 
 	const response = await fetch("http://localhost:8080/comic/latest100", {

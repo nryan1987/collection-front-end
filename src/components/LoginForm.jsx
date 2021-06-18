@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import getFetchJWTAction from "../store/actions/jwtActions";
 import { connect } from "react-redux";
 import store from "../store/Store";
+import heroes from "../images/heroes.gif"
+import "../css/LoginForm.css"
 
 class LoginForm extends Component {
 	constructor(props) {
@@ -22,27 +24,26 @@ class LoginForm extends Component {
 
 	render() {
 		return (
-			<div>
+			<div className="mainDiv">
+				<img src={heroes} />
 				<h3>Sign In</h3>
 
 				<div className="form-group">
-					<label>Email address</label>
 					<input
 						name="username"
 						value={this.props.username}
 						onChange={this.props.updateUserName}
-						className="form-control"
-						placeholder="Enter username or email address"
+						className="inputs"
+						placeholder="Enter email address"
 					/>
 				</div>
 
 				<div className="form-group">
-					<label>Password</label>
 					<input
 						type="password"
 						name="password"
 						onChange={this.props.updatePassword}
-						className="form-control"
+						className="inputs"
 						placeholder="Enter password"
 					/>
 				</div>
