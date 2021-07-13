@@ -11,15 +11,33 @@ class LoginForm extends Component {
 
 		console.log("LoginForm props: ", this.props);
 		console.log("Store:", store.getState());
+
+		this.state = { isLoading: false };
 	}
 
-	componentDidMount() {
-		console.log("Component mounted");
-	}
-
-	handleLoginSubmit = () => {
+	handleLoginSubmit = (e) => {
+		e.preventDefault();
+		this.setState({isLoading: true});
 		console.log("Login submit: ", this.props.history);
-		return this.props.updateJWT(this.props.history);
+		
+		getFetchJWTAction(
+			store.getState().user.username,
+			store.getState().user.password
+		).then((jwtAction) => {
+			console.log(jwtAction);
+			if (jwtAction.payload === null) {
+				alert(jwtAction.message);
+				this.setState({isLoading: false});
+			} else {
+				this.props.updateJWT(this.props.history, jwtAction);
+			}
+		})
+		.catch(
+			(error) => {
+				alert(error);
+				this.setState({isLoading: false});
+			}
+		);
 	};
 
 	render() {
@@ -28,6 +46,7 @@ class LoginForm extends Component {
 				<img src={heroes} />
 				<h3>Sign In</h3>
 
+				<form onSubmit={(e) => {this.handleLoginSubmit(e)}}>
 				<div className="form-group">
 					<input
 						name="username"
@@ -61,16 +80,16 @@ class LoginForm extends Component {
 					</div>
 				</div>
 
-				<button
-					onClick={this.handleLoginSubmit}
+				<input
 					type="submit"
-					className="btn btn-primary btn-block"
-				>
-					Submit
-				</button>
+					className="btn btn-primary"
+					value="Submit"
+					disabled={this.state.isLoading}
+				/>
 				<p className="forgot-password text-right">
 					Forgot <a href="#">password?</a>
 				</p>
+				</form>
 			</div>
 		);
 	}
@@ -96,21 +115,10 @@ const mapDispatchToProps = (dispatch) => {
 			const action = { type: "UPDATE_PASSWORD", payload: event.target.value };
 			dispatch(action);
 		},
-		updateJWT: (history) => {
-			console.log("update jwt", store.getState());
-			getFetchJWTAction(
-				store.getState().user.username,
-				store.getState().user.password
-			).then((jwtAction) => {
-				console.log(jwtAction);
-				if (jwtAction.payload === null) {
-					alert(jwtAction.message);
-				} else {
-					dispatch(jwtAction);
-					history.push("/main");
-				}
-			});
-		},
+		updateJWT: (history, jwtAction) => {
+			dispatch(jwtAction);
+			history.push("/main");
+		}
 	};
 };
 
