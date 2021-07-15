@@ -1,0 +1,22 @@
+.mainMenuDiv {
+  border-style: solid;
+  border-width: thin;
+  border-color: black;
+  border-top: none;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  background-color: grey;
+  height: 50vh;
+}
+
+.bottom-container {
+  border-style: solid;
+  border-width: thick;
+  border-color: red;
+  width: 50%;
+  height: 50vh;
+}
+
+.carouselCaption {
+  text-shadow: 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black;
+}
