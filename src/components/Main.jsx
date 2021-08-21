@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import LoginForm from "./LoginForm";
 import MainMenu from "../MainMenu";
+import EnterNewComic from "./EnterNewComic";
 import { NavLink, Switch, Route } from "react-router-dom";
 
 class Main extends Component {
@@ -15,6 +16,7 @@ class Main extends Component {
 				<Route exact path="/main" component={MainMenu}></Route>
 				<Route exact path="/about" component={About}></Route>
 				<Route exact path="/contact" component={Contact}></Route>
+				<Route exact path="/newComics" component={EnterNewComic}></Route>
 			</Switch>
 		);
 	}
