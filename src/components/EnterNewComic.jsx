@@ -80,6 +80,25 @@ class EnterNewComic extends Component {
         this.setState({ showModal: true });
     }
 
+    handleSortListClick = () => {
+        var comicsCopy = [...this.state.comics];
+        comicsCopy.sort(function (a, b) {
+            return a.title > b.title ? 1 : a.title < b.title ? -1 : 0
+            || a.volume > b.volume ? 1 : a.volume < b.volume ? -1 : 0 
+            || a.issue > b.issue ? 1 : a.issue < b.issue ? -1 : 0;
+        });
+
+        var comicRowCopy = [];
+        var index;
+        comicsCopy.map((c) => {
+            index = this.state.comicRows.findIndex((cr) => parseInt(cr.key, 10) === c.id);
+            comicRowCopy.push(this.state.comicRows[index]);
+        });
+
+        this.setState({ comics: comicsCopy });
+        this.setState({ comicRows: comicRowCopy });
+    }
+
     handleTitleChange = (rowId, title) => {
         console.log("handleTitleChange: " + rowId + " " + title);
         var comicsCopy = [...this.state.comics];
@@ -205,6 +224,12 @@ class EnterNewComic extends Component {
 						className="btn navBarButton"
 				>
 					Add comic list
+				</button>
+                <button onClick={this.handleSortListClick}
+						type="submit"
+						className="btn navBarButton"
+				>
+					Sort List
 				</button>
                 Total Comics to be added: {this.state.comicRows.length}
                 ${this.state.pricePaidTotal.toFixed(2)}
