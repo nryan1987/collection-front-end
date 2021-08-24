@@ -70,6 +70,9 @@ class NewComicRow extends Component {
         console.log(this.state);
 
         var notesArr = e.target.value.split(";");
+        notesArr.map((note, i)=>{
+            notesArr[i] = {notes: note};
+        });
 
         this.props.onNoteChange(this.props.id, notesArr);
     }
@@ -85,7 +88,7 @@ class NewComicRow extends Component {
     render() {
         var removeButton = <button onClick={() => this.props.onDelete(this.props.id)}
                                     type="submit">
-                                    <Icon icon="minus" />Remove {this.props.id}
+                                    <Icon icon="minus" />Remove
                             </button>;
 
         const titles = [...new Set(this.props.titlesList.sort((a, b) => a.title > b.title ? 1 : -1).map((a) => a.title))];
