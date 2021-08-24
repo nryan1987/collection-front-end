@@ -207,33 +207,39 @@ class EnterNewComic extends Component {
                         {this.state.comicRows}
                     </tbody>
                 </Table>
-                <button onClick={this.handleAddClick}
-						type="submit"
-						className="btn navBarButton"
-				>
-					<Icon icon="plus" />Add Row
-				</button>
-                <button onClick={this.handleClearClick}
-						type="submit"
-						className="btn navBarButton"
-				>
-					<Icon icon="minus" />Clear
-				</button>
-                <button onClick={this.handleAddComicList}
-						type="submit"
-						className="btn navBarButton"
-				>
-					Add comic list
-				</button>
-                <button onClick={this.handleSortListClick}
-						type="submit"
-						className="btn navBarButton"
-				>
-					Sort List
-				</button>
-                Total Comics to be added: {this.state.comicRows.length}
-                ${this.state.pricePaidTotal.toFixed(2)}
+                <div className="topButtonPanel">
+                    <button onClick={this.handleAddClick}
+					    	type="submit"
+						    className="btn navBarButton"
+                            style={{float:"left"}}
+				    >
+					    <Icon icon="plus-square-o" /> Add Row
+				    </button>
+                    <button onClick={this.handleSortListClick}
+					    	type="submit"
+						    className="btn navBarButton"
+                            style={{float:"left"}}
+				    >
+					    <Icon icon="sort" /> Sort List
+				    </button>
+                    <button onClick={this.handleClearClick}
+					    	type="submit"
+						    className="btn navBarButton"
+                            style={{float:"right"}}
+				    >
+					    <Icon icon="minus-square-o" /> Clear
+				    </button>
+                </div>
+                <div className="bottomButtonPanel">
+                    <button onClick={this.handleAddComicList}
+					    	type="submit"
+						    className="btn navBarButton"
+				    >
+					    <Icon icon="plus" /> Add comic list
+				    </button>
 
+                    Total Comics to be added: {this.state.comicRows.length}: ${this.state.pricePaidTotal.toFixed(2)}
+                </div>
                 <AddComicsModal showModal={this.state.showModal} onHide={this.hideModal} comicsList={this.state.comics}/>                
             </div>
         );

@@ -13,3 +13,21 @@
 .publisherHeader {
   width: 20%;
 }
+
+.topButtonPanel {
+  border-style: solid;
+  border-width: thin;
+  border-color: black;
+  border-left: none;
+  border-right: none;
+  float: left;
+  width: 100%;
+}
+
+.bottomButtonPanel {
+  border-style: solid;
+  border-width: thin;
+  border-color: black;
+  border-left: none;
+  border-right: none;
+}
