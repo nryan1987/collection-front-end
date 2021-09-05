@@ -240,7 +240,7 @@ class EnterNewComic extends Component {
 
                     Total Comics to be added: {this.state.comicRows.length}: ${this.state.pricePaidTotal.toFixed(2)}
                 </div>
-                <AddComicsModal showModal={this.state.showModal} onHide={this.hideModal} comicsList={this.state.comics}/>                
+                <AddComicsModal showModal={this.state.showModal} onHide={this.hideModal} onSuccessfulAdd={this.handleClearClick} comicsList={this.state.comics}/>
             </div>
         );
     }

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import store from "../store/Store";
 import { addComicList } from '../services/comicsService';
+import "../css/Modal.css"
 
 class AddComicsModal extends Component {
     constructor(props) {
@@ -9,21 +10,20 @@ class AddComicsModal extends Component {
 
         this.state = {
             loading: false
-        /*    title:"", 
-            volume:0, 
-            issueNum:0, 
-            notes:[], 
-            publisher:"", 
-            publisherInput:"", 
-            pricePaid:0.0*/
         }
 	}
 
     onSaveChangesClick = () => {
         this.setState({ loading: true });
         var {jwt} = store.getState().user;
-        var response = addComicList(jwt,this.props.comicsList);
-        console.log(response);
+        addComicList(jwt,this.props.comicsList).then((response)=>{
+            console.log(response);
+            this.setState({ loading: false });
+            if(response.ok){
+                this.props.onSuccessfulAdd();
+            }
+        });
+        
     }
 
     render() {
@@ -54,6 +54,7 @@ class AddComicsModal extends Component {
         return (
             <div>
                 <Modal style={{opacity:1}} show={this.props.showModal} onHide={this.props.onHide} backdrop="static">
+                    <div className="scrollableModal">
                     <Modal.Header closeButton>
                         <Modal.Title>Modal heading</Modal.Title>
                     </Modal.Header>
@@ -66,6 +67,7 @@ class AddComicsModal extends Component {
                             Save Changes
                         </button>
                     </Modal.Footer>
+                    </div>
                 </Modal>
             </div>
         );
