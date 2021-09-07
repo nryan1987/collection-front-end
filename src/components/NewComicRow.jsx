@@ -34,7 +34,6 @@ class NewComicRow extends Component {
         }
         else {
             this.setState({title: e.target.value});
-            this.setState({publisher: ""});
             this.props.onTitleChange(this.props.id, e.target.value);
             this.props.onPublisherChange(this.props.id, "");
         }
