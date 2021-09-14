@@ -80,7 +80,12 @@ export async function addComicList(jwt, comicArray) {
 		body: JSON.stringify(comicArray),
 	});
 	const responseJson = await response.json();
-	console.log("json: ", responseJson);
 
-	return responseJson;
+	var res = {
+		...responseJson,
+		status: response.status,
+		ok: response.ok
+	};
+
+	return res;
 }

@@ -9,7 +9,10 @@ class AddComicsModal extends Component {
 		super(props);
 
         this.state = {
-            loading: false
+            loading: false,
+            errors: false,
+            errorMap: [],
+            modalText: "No list to save"
         }
 	}
 
@@ -17,18 +20,26 @@ class AddComicsModal extends Component {
         this.setState({ loading: true });
         var {jwt} = store.getState().user;
         addComicList(jwt,this.props.comicsList).then((response)=>{
-            console.log(response);
             this.setState({ loading: false });
+            this.setState({ modalText: response.message });
             if(response.ok){
                 this.props.onSuccessfulAdd();
             }
+            else {
+                this.setState({errorMap: response.errors});
+                this.setState({ errors: true });
+            }
         });
-        
+    }
+
+    onHideClick = () => {
+        this.setState({ errors: false });
+        this.props.onHide();
     }
 
     render() {
-        var modalBody = <Modal.Body>No list to save</Modal.Body>;
-        if(this.props.comicsList.length > 0){
+        var modalBody = <Modal.Body>{this.state.modalText}</Modal.Body>;
+        if(this.props.comicsList.length > 0 && this.state.errors == false){
             this.props.comicsList.sort(function (a, b) {
                 return a.title > b.title ? 1 : a.title < b.title ? -1 : 0
                 || a.volume > b.volume ? 1 : a.volume < b.volume ? -1 : 0 
@@ -51,19 +62,32 @@ class AddComicsModal extends Component {
                 </div>;
             }
         }
+        else if(this.state.errors) {
+            modalBody = <div><Modal.Body>{this.state.modalText}</Modal.Body>
+            <ul>
+                {
+                    this.state.errorMap.map(function(error, index)
+                        {
+                            return <li key={index}>{error.entity} - {error.errorMessage}</li>
+                        }
+                    )
+                }
+            </ul>
+            </div>;
+        }
         return (
             <div>
                 <Modal style={{opacity:1}} show={this.props.showModal} onHide={this.props.onHide} backdrop="static">
                     <div className="scrollableModal">
                     <Modal.Header closeButton>
-                        <Modal.Title>Modal heading</Modal.Title>
+                        <Modal.Title>Comics to Add</Modal.Title>
                     </Modal.Header>
                     {modalBody}
                     <Modal.Footer>
-                        <button variant="secondary" onClick={this.props.onHide}>
+                        <button variant="secondary" onClick={this.onHideClick}>
                             Close
                         </button>
-                        <button variant="primary" onClick={this.onSaveChangesClick} disabled={this.state.loading}>
+                        <button variant="primary" onClick={this.onSaveChangesClick} disabled={this.state.loading || this.props.comicsList.length <= 0 || this.state.errors}>
                             Save Changes
                         </button>
                     </Modal.Footer>
