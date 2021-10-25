@@ -61,6 +61,13 @@ class NavigationBar extends Component {
 							<Icon icon="home" />Home
 						</button>
 						<button
+							onClick={() => {this.goToPage("/allComics")}}
+							type="submit"
+							className="btn navBarButton"
+						>
+							<Icon icon="th-list" />See All Comics
+						</button>
+						<button
 							onClick={() => {this.goToPage("/newComics")}}
 							type="submit"
 							className="btn navBarButton"

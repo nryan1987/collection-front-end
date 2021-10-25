@@ -89,3 +89,28 @@ export async function addComicList(jwt, comicArray) {
 
 	return res;
 }
+
+export async function getAllComicsPaginated(jwt, pageNumber, pageSize, searchTerm) {
+	console.log("Page Number: ", pageNumber);
+	console.log("Page Size: ", pageSize);
+	console.log("Search Term: ", searchTerm);
+
+	const response = await fetch("http://localhost:8080/comic/getComicsPage/"+pageNumber+"/"+pageSize, {
+		method: "POST",
+		headers: {
+			Accept: "application/json",
+			"Content-Type": "application/json",
+			"Authorization": "Bearer " + jwt
+		},
+		body: searchTerm
+	});
+
+	const responseJson = await response.json();
+	var res = {
+		...responseJson,
+		status: response.status,
+		ok: response.ok
+	};
+
+	return res;
+}

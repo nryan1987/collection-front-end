@@ -3,6 +3,7 @@ import LoginForm from "./LoginForm";
 import MainMenu from "../MainMenu";
 import EnterNewComic from "./EnterNewComic";
 import { NavLink, Switch, Route } from "react-router-dom";
+import AllComics from "./AllComics";
 
 class Main extends Component {
 	/*constructor(props) {
@@ -17,6 +18,7 @@ class Main extends Component {
 				<Route exact path="/about" component={About}></Route>
 				<Route exact path="/contact" component={Contact}></Route>
 				<Route exact path="/newComics" component={EnterNewComic}></Route>
+				<Route exact path="/allComics" component={AllComics}></Route>
 			</Switch>
 		);
 	}
