@@ -6,7 +6,7 @@ import Viewcomicmodal from './components/ViewComicModal';
 import Carousel from 'react-bootstrap/Carousel';
 import ImageCarousel from "./components/ImageCarousel";
 import { View, Image, Text } from "react-native";
-import { pic_url } from "./store/constants";
+import { host, pic_url } from "./store/constants";
 import "./css/MainMenu.css"
 
 class MainMenu extends Component {
@@ -16,6 +16,8 @@ class MainMenu extends Component {
 
 		console.log("MainMenu props: ", this.props);
 		console.log("Store:", store.getState());
+		console.log("host: ", host);
+		console.log("pic_url: ", pic_url);
 
 		this.state = { carouselSlides: [], isLoading: true, showComicModal: false };
 	}
