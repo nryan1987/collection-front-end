@@ -4,7 +4,7 @@ import NavigationBar from './NavigationBar';
 import Table from 'react-bootstrap/Table';
 import { Icon } from "rsuite";
 import NewComicRow from './NewComicRow';
-import { getTitlesAndPublishers, addComicList } from '../services/comicsService';
+import { getTitlesAndPublishers } from '../services/comicsService';
 import "../css/EnterNewComic.css"
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';

@@ -29,18 +29,20 @@ class NewComicRow extends Component {
 
             this.setState({title: pub[0].title});
             this.setState({publisher: pub[0].publisher});
+            this.setState({volume: pub[0].volume});
             this.props.onTitleChange(this.props.id, pub[0].title);
             this.props.onPublisherChange(this.props.id, pub[0].publisher);
+            this.props.onVolumeChange(this.props.id, pub[0].volume);
         }
         else {
             this.setState({title: e.target.value});
             this.props.onTitleChange(this.props.id, e.target.value);
-            this.props.onPublisherChange(this.props.id, "");
+            //this.props.onPublisherChange(this.props.id, "");
         }
     }
 
     handlePublisherSelect = (e) => {
-        console.log(this.props.id + "-" + e.target.value);
+        console.log("handlePublisherSelect -" + this.props.id + "-" + e.target.value);
         console.log(this.state);
 
         this.props.onPublisherChange(this.props.id, e.target.value);
@@ -83,6 +85,7 @@ class NewComicRow extends Component {
     }
 
     render() {
+        console.log(this.props.titlesList);
         var removeButton = <button onClick={() => this.props.onDelete(this.props.id)}
                                     type="submit">
                                     <Icon icon="minus" />Remove
@@ -104,7 +107,7 @@ class NewComicRow extends Component {
                         )}
                     />
                 </td>
-                <td><TextField label="Volume" margin="normal" variant="outlined" onChange={this.handleVolumeChange} /></td>
+                <td><TextField label="Volume" value={this.state.volume} margin="normal" variant="outlined" onChange={this.handleVolumeChange} /></td>
                 <td><TextField label="Issue" margin="normal" variant="outlined" onChange={this.handleIssueChange} /></td>
                 <td><TextField label="Notes" margin="normal" variant="outlined" onChange={this.handleNoteChange} /></td>
                 <td>
@@ -115,11 +118,13 @@ class NewComicRow extends Component {
                         onChange={(event, newValue) => {
                             console.log("change: ", newValue);
                             this.setState({publisher: newValue});
+                            this.props.onPublisherChange(this.props.id, newValue);
                           }}
                         inputValue={this.state.publisherInput}
                         onInputChange={(event, newInputValue) => {
                             console.log("input change: ", newInputValue);
                             this.setState({publisherInput: newInputValue});
+                            this.props.onPublisherChange(this.props.id, newInputValue);
                           }}
                         options={publishers}
                         renderInput={(params) => (

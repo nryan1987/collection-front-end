@@ -9,7 +9,7 @@ const userReducer = (state = initialState, action) => {
 		case "UPDATE_PASSWORD":
 			return Object.assign({}, state, { password: action.payload });
 		case "UPDATE_JWT":
-			return Object.assign({}, state, { jwt: action.payload });
+			return Object.assign({}, state, { jwt: action.payload, userSettings: action.userSettings });
 		default:
 			return state;
 	}

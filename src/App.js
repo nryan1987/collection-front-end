@@ -1,5 +1,6 @@
 //import logo from "./logo.svg";
 import "./App.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
 //import store from "./store/Store";
 //import LoginForm from "./components/LoginForm";
 //import Navigation from "./components/Navigation";

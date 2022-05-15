@@ -2,7 +2,10 @@ import React, { Component } from "react";
 import NavigationBar from "./components/NavigationBar";
 import store from "./store/Store";
 import getLatestIssues from "./services/comicsService";
+import Viewcomicmodal from './components/ViewComicModal';
 import Carousel from 'react-bootstrap/Carousel';
+import ImageCarousel from "./components/ImageCarousel";
+import { View, Image, Text } from "react-native";
 import "./css/MainMenu.css"
 
 class MainMenu extends Component {
@@ -13,7 +16,7 @@ class MainMenu extends Component {
 		console.log("MainMenu props: ", this.props);
 		console.log("Store:", store.getState());
 
-		this.state = { carouselSlides: [], isLoading: true };
+		this.state = { carouselSlides: [], isLoading: true, showComicModal: false };
 	}
 
 	componentDidMount() {
@@ -26,15 +29,32 @@ class MainMenu extends Component {
 		getLatestIssues(store.getState().user.userSettings.numRecentIssues, jwt).then(
 			(latestIssues)=>{
 				var slides = [];
-				latestIssues.map((comic) => (slides.push(<Carousel.Item><img key={Date.now()} src={"http://kandor/images/" + comic.picture}
-				alt={comic.title + " VOL: " + comic.volume + " #" + comic.issue} height='375px' width='250px'/>
-				<Carousel.Caption><p className="carouselCaption">{comic.title + " VOL: " + comic.volume + " #" + comic.issue}</p></Carousel.Caption>
-				</Carousel.Item>)));
+				latestIssues.map((comic) => (slides.push(
+					<View>
+                    <Image
+                      style={{
+                        borderColor: "dark grey",
+                        borderWidth: 5,
+                        borderRadius: 20,
+                      resizeMode: "contain",
+                      height: 425,
+                      width: 300
+                      }}
+                      source={"http://kandor/images/" + comic.picture}
+                    />
+                    <Text>{comic.title + " VOL: " + comic.volume + " #" + comic.issue}</Text>
+                  </View>
+				)));
 
 				this.setState({ carouselSlides: slides });
 				this.setState({isLoading: false});
 			}
 		);
+	}
+
+	handleSlideClick = (selectedIndex) => {
+		console.log(selectedIndex);
+
 	}
 
 	handleSelect = (selectedIndex, e) => {
@@ -48,7 +68,8 @@ class MainMenu extends Component {
 		const isLoading = this.state.isLoading;
 		var main = <div>Loading...</div>;
 		if(!isLoading) {
-			main = <Carousel interval={this.pictureIntervalMS} onSelect={this.handleSelect}> {this.state.carouselSlides} </Carousel>
+			//main = <Carousel interval={this.pictureIntervalMS} onSelect={this.handleSelect}> {this.state.carouselSlides} </Carousel>
+			main = <ImageCarousel slides={this.state.carouselSlides}/>
 		}
 		return (			
 			<div>
@@ -58,6 +79,7 @@ class MainMenu extends Component {
 				</div>
 				<div className="bottom-container" style={{float:"left"}}>div2</div>
 				<div className="bottom-container" style={{float:"right"}}>div3</div>
+				<Viewcomicmodal showModal={this.state.showComicModal} comic={this.state.selectedComic} onHide={this.hideComicModal}/>
 			</div>
 		);
 	}

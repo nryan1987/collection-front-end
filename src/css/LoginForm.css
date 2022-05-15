@@ -20,18 +20,3 @@
   animation-duration: 10ms;
   -webkit-tap-highlight-color: transparent;
 }
-
-.mainMenuDiv {
-  border-style: solid;
-  border-width: thick;
-  border-color: red;
-  height: 50vh;
-}
-
-.bottom-container {
-  border-style: solid;
-  border-width: thick;
-  border-color: red;
-  width: 50%;
-  height: 50vh;
-}

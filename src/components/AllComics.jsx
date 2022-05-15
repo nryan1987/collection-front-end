@@ -7,13 +7,14 @@ import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 import NavigationBar from './NavigationBar';
-import { getAllComicsPaginated, getCollectionStats } from '../services/comicsService';
+import { getAllComicsPaginated, getOneIssue } from '../services/comicsService';
+import Viewcomicmodal from './ViewComicModal';
 
 class AllComics extends Component {
     constructor(props) {
 		super(props);
 
-		this.state = { pageList:[], pagination: [], numPages:0, isLoading:false, searchText:null, pageSize:500 };
+		this.state = { pageList:[], pagination: [], numPages:0, isLoading:false, searchText:null, pageSize:500, selectedComic: null, showComicModal: false };
 	}
 
     componentDidMount() {
@@ -39,7 +40,7 @@ class AllComics extends Component {
                     console.log(res);
                     if(res.ok) {
                         let page = [];
-                        res.value.map((c)=>{page.push(<tr key={c.comicID}>
+                        res.value.map((c)=>{page.push(<tr key={c.comicID} onClick={() => this.handleComicClicked(c.comicID)}>
                             <td>{c.comicID}</td>
                             <td style={{ textAlign:"left" }}>{c.title}</td>
                             <td style={{ width:"5%" }}>{c.volume}</td>
@@ -88,7 +89,51 @@ class AllComics extends Component {
         this.updateList(0);
     }
 
+    handleComicClicked = (comicID) => {
+        console.log("ComicID: " + comicID);
+        if(!this.state.showComicModal) {
+            getOneIssue(comicID, store.getState().user).then(
+                (res) => {
+                    console.log(res);
+                    this.setState({selectedComic: res});
+                    this.setState({showComicModal: true});
+                }
+            );
+        }
+    }
+
+    hideComicModal = () => {
+        console.log("Updating showComicModal");
+        this.setState({showComicModal: false});
+    }
+
     render() {
+        var results;
+        if(this.state.pageList.length > 0) {
+            results = <Table size="sm" striped bordered hover hidden={this.state.isLoading}>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Volume</th>
+                    <th>Issue</th>
+                    <th>Publication Date</th>
+                    <th>Notes</th>
+                    <th>Publisher</th>
+                    <th>Price Paid</th>
+                    <th>Value</th>
+                    <th>Condition</th>
+                </tr>
+            </thead>
+            <tbody>
+                {this.state.pageList}
+            </tbody>
+        </Table>;
+        } else {
+            results = <div>No Items match your search</div>
+        }
+
+
         return (
             <div>
                 <NavigationBar history={this.props.history}/>
@@ -106,26 +151,13 @@ class AllComics extends Component {
                 <Spinner animation="border" role="status" hidden={!this.state.isLoading}>
                     {/* <span className="visually-hidden">Loading...</span> */}
                 </Spinner>
-                <Table size="sm" striped bordered hover hidden={this.state.isLoading}>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Title</th>
-                            <th>Volume</th>
-                            <th>Issue</th>
-                            <th>Publication Date</th>
-                            <th>Notes</th>
-                            <th>Publisher</th>
-                            <th>Price Paid</th>
-                            <th>Value</th>
-                            <th>Condition</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.state.pageList}
-                    </tbody>
-                </Table>
+                {!this.state.isLoading && results}
                 <Pagination size="sm" style={{ display: "flex", justifyContent: "center" }}>{this.state.pagination}</Pagination>
+                { this.state.showComicModal ? 
+                    <Viewcomicmodal showModal={this.state.showComicModal} comic={this.state.selectedComic} onHide={this.hideComicModal}/>
+                    : 
+                    null 
+                }
             </div>
         );
     }

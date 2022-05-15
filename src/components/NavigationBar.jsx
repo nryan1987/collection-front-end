@@ -87,9 +87,9 @@ class NavigationBar extends Component {
 					</Nav>
 					<Nav pullRight>
 						<Nav.Item>Total Comics: {this.state.countOfComics}</Nav.Item>
-						<Nav.Item>Total Price Paid: ${this.state.sumOfPricePaid}</Nav.Item>
+						<Nav.Item>Total Price Paid: ${this.state.sumOfPricePaid.toFixed(2)}</Nav.Item>
 						<Nav.Item>Average Price Paid: ${this.state.averagePricePaid}</Nav.Item>
-						<Nav.Item>Total Value: ${this.state.sumOfValue}</Nav.Item>
+						<Nav.Item>Total Value: ${this.state.sumOfValue.toFixed(2)}</Nav.Item>
 						<Nav.Item>Average Value: ${this.state.averageValue}</Nav.Item>
 						<Nav.Item icon={<Icon icon="cog" />} onSelect={this.handleSettingsSelect}>Settings</Nav.Item>
 					</Nav>
