@@ -1,4 +1,4 @@
-export const host = process.env.APP_URL != null ? process.env.APP_URL : "localhost:8080";
+export const host = process.env.REACT_APP_BACKEND_URL != null ? process.env.REACT_APP_BACKEND_URL : "localhost:8080";
 export default async function getFetchJWTAction(username, password) {
 	console.log("host: ", host);
 	console.log("getFetchJWTAction: ", username, password);
