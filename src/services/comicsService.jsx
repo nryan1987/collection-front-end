@@ -1,6 +1,8 @@
+export const host = process.env.APP_URL != null ? process.env.APP_URL : "localhost:8080";
+
 export default async function getLatestIssues(numIssues, jwt) {
 	console.log("getLast100Issues - numIssues: ", numIssues);
-	const response = await fetch("http://localhost:8080/comic/latestIssues", {
+	const response = await fetch("http://" + host + "/comic/latestIssues", {
 		method: "POST",
 		headers: {
 			Accept: "application/json",
@@ -15,10 +17,27 @@ export default async function getLatestIssues(numIssues, jwt) {
 	return responseJson;
 }
 
+export async function getIssuesByTitle(jwt, title) {
+	console.log("getIssuesByTitle - title: ", title);
+	const response = await fetch("http://" + host + "/comic/findByTitle", {
+		method: "POST",
+		headers: {
+			Accept: "application/json",
+			"Content-Type": "application/json",
+			"Authorization": "Bearer " + jwt
+		},
+		body: title,
+	});
+	const responseJson = await response.json();
+	console.log("json: ", responseJson);
+
+	return responseJson;
+}
+
 export async function getOneIssue(id, {jwt}) {
 	console.log("getOneIssue");
 
-	const response = await fetch("http://localhost:8080/comic/"+id, {
+	const response = await fetch("http://" + host + "/comic/"+id, {
 		method: "GET",
 		headers: {
 			Accept: "application/json",
@@ -35,7 +54,7 @@ export async function getOneIssue(id, {jwt}) {
 export async function getCollectionStats(jwt) {
 	console.log("getCollectionStats. token: " + jwt);
 
-	const response = await fetch("http://localhost:8080/comic/collectionStats", {
+	const response = await fetch("http://" + host + "/comic/collectionStats", {
 		method: "GET",
 		headers: {
 			Accept: "application/json",
@@ -52,7 +71,7 @@ export async function getCollectionStats(jwt) {
 export async function getTitlesAndPublishers(jwt) {
 	console.log("getCollectionStats. token: " + jwt);
 
-	const response = await fetch("http://localhost:8080/comic/titles", {
+	const response = await fetch("http://" + host + "/comic/titles", {
 		method: "GET",
 		headers: {
 			Accept: "application/json",
@@ -70,7 +89,7 @@ export async function addComicList(jwt, comicArray) {
 	console.log(comicArray);
 	console.log(JSON.stringify(comicArray));
 
-	const response = await fetch("http://localhost:8080/comic/addComics", {
+	const response = await fetch("http://" + host + "/comic/addComics", {
 		method: "POST",
 		headers: {
 			Accept: "application/json",
@@ -95,7 +114,7 @@ export async function getAllComicsPaginated(jwt, pageNumber, pageSize, searchTer
 	console.log("Page Size: ", pageSize);
 	console.log("Search Term: ", searchTerm);
 
-	const response = await fetch("http://localhost:8080/comic/getComicsPage/"+pageNumber+"/"+pageSize, {
+	const response = await fetch("http://" + host + "/comic/getComicsPage/"+pageNumber+"/"+pageSize, {
 		method: "POST",
 		headers: {
 			Accept: "application/json",

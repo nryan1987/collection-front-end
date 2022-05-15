@@ -1,7 +1,9 @@
+export const host = process.env.APP_URL != null ? process.env.APP_URL : "localhost:8080";
 export default async function getFetchJWTAction(username, password) {
+	console.log("host: ", host);
 	console.log("getFetchJWTAction: ", username, password);
 
-	const response = await fetch("http://localhost:8080/user/login", {
+	const response = await fetch("http://" + host + "/user/login", {
 		method: "POST",
 		headers: {
 			Accept: "application/json",
@@ -12,6 +14,7 @@ export default async function getFetchJWTAction(username, password) {
 			password: password,
 		}),
 	});
+	console.log("response ok: ", response.ok);
 	const responseJson = await response.json();
 	console.log("json: ", responseJson);
 
@@ -19,6 +22,7 @@ export default async function getFetchJWTAction(username, password) {
 		type: "UPDATE_JWT",
 		payload: responseJson.jwt,
 		message: responseJson.message,
+		userSettings: responseJson.userSettings
 	};
 	return jwtAction;
 }
