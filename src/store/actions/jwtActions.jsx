@@ -1,4 +1,4 @@
-import { host } from "../store/constants";
+import { host } from "../../store/constants";
 
 export default async function getFetchJWTAction(username, password) {
 	console.log("host: ", host);
