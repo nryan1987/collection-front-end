@@ -8,6 +8,7 @@ import ItemsCarousel from 'react-items-carousel';
 import store from "../store/Store";
 import Spinner from 'react-bootstrap/Spinner';
 import { getOneIssue, getIssuesByTitle } from '../services/comicsService';
+import { pic_url } from '../store/constants';
   
 
 class Viewcomicmodal extends Component {
@@ -53,7 +54,7 @@ class Viewcomicmodal extends Component {
                             let slides = [];
                             res.map((c)=>{slides.push(
                                 <div>
-                                    <img key={Date.now()} src={"http://kandor/images/" + c.picture}
+                                    <img key={Date.now()} src={pic_url + c.picture}
                                     height='425px' width='300px'/>
                                     <br>
                                     </br>
@@ -184,7 +185,7 @@ class Viewcomicmodal extends Component {
                             </Form>
                         </div>
 	    			    <div className="container-50w" style={{float:"right"}}>
-                            <img key={Date.now()} src={"http://kandor/images/" + this.state.comic.picture}
+                            <img key={Date.now()} src={pic_url + this.state.comic.picture}
 			    	            alt={this.state.comic.title + " VOL: " + this.state.comic.volume + " #" + this.state.comic.issue}
                                 className="img-center"/>
                         </div>

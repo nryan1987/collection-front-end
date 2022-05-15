@@ -6,6 +6,7 @@ import Viewcomicmodal from './components/ViewComicModal';
 import Carousel from 'react-bootstrap/Carousel';
 import ImageCarousel from "./components/ImageCarousel";
 import { View, Image, Text } from "react-native";
+import { pic_url } from "./store/constants";
 import "./css/MainMenu.css"
 
 class MainMenu extends Component {
@@ -40,7 +41,7 @@ class MainMenu extends Component {
                       height: 425,
                       width: 300
                       }}
-                      source={"http://kandor/images/" + comic.picture}
+                      source={pic_url + comic.picture}
                     />
                     <Text>{comic.title + " VOL: " + comic.volume + " #" + comic.issue}</Text>
                   </View>
