@@ -1,9 +1,10 @@
-export const host = process.env.REACT_APP_BACKEND_URL != null ? process.env.REACT_APP_BACKEND_URL : "localhost:8080";
+import { host } from "../store/constants";
+
 export default async function getFetchJWTAction(username, password) {
 	console.log("host: ", host);
 	console.log("getFetchJWTAction: ", username, password);
 
-	const response = await fetch("http://" + host + "/user/login", {
+	const response = await fetch(host + "/user/login", {
 		method: "POST",
 		headers: {
 			Accept: "application/json",
