@@ -179,7 +179,23 @@ class Viewcomicmodal extends Component {
                                         Issue
                                     </Form.Label>
                                     <Col sm="2">
-                                        <Form.Control type="number" step="0.1" value={this.state.comic.issue} onChange={(e) => {this.onVolumeChange(e.target.value)}}/>
+                                        <Form.Control type="number" step="0.1" value={this.state.comic.issue} onChange={(e) => {this.onIssueChange(e.target.value)}}/>
+                                    </Col>
+                                </Form.Group>
+                                <Form.Group as={Row}>
+                                    <Form.Label column>
+                                        Last Updated
+                                    </Form.Label>
+                                    <Col sm="10">
+                                        <Form.Control plaintext readOnly value={this.state.comic.lastUpdated} />
+                                    </Col>
+                                </Form.Group>
+                                <Form.Group as={Row}>
+                                    <Form.Label column>
+                                        Record Created
+                                    </Form.Label>
+                                    <Col sm="10">
+                                        <Form.Control plaintext readOnly value={this.state.comic.recordCreationDate} />
                                     </Col>
                                 </Form.Group>
                             </Form>
