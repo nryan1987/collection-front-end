@@ -148,7 +148,12 @@ class Viewcomicmodal extends Component {
                         <div>
                             {carousel}
                         </div>
-                        <div className="container-50w" style={{float:"left"}}>
+                        <div className="container-50w-right">
+                            <img key={Date.now()} src={pic_url + this.state.comic.picture}
+			    	            alt={this.state.comic.title + " VOL: " + this.state.comic.volume + " #" + this.state.comic.issue}
+                                className="img-center"/>
+                        </div>
+                        <div className="container-50w-left">
                             <Form>
                                 <Form.Group as={Row}>
                                     <Form.Label column>
@@ -199,11 +204,6 @@ class Viewcomicmodal extends Component {
                                     </Col>
                                 </Form.Group>
                             </Form>
-                        </div>
-	    			    <div className="container-50w" style={{float:"right"}}>
-                            <img key={Date.now()} src={pic_url + this.state.comic.picture}
-			    	            alt={this.state.comic.title + " VOL: " + this.state.comic.volume + " #" + this.state.comic.issue}
-                                className="img-center"/>
                         </div>
                         <div className="button-div">
                             <Button style={{margin:"10px"}} variant="outline-secondary" id="button-addon2" onClick={this.onHideClick}>
