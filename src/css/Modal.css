@@ -28,7 +28,8 @@
   display: block;
   margin-left: auto;
   margin-right: auto;
-  width: 50%;
+  height: 770;
+  width: 500;
 }
 
 .button-div {
@@ -52,5 +53,13 @@
     border-color: red;
     width: 100%;
     float: none;
+  }
+
+  [class*="img-center"] {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 425px;
+    width: 300px;
   }
 }
