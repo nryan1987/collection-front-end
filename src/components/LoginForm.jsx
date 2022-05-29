@@ -43,9 +43,8 @@ class LoginForm extends Component {
 	render() {
 		return (
 			<div className="mainDiv">
-				<img src={heroes} />
+				<img className="mainImg" src={heroes} />
 				<h3>Sign In</h3>
-
 				<form onSubmit={(e) => {this.handleLoginSubmit(e)}}>
 				<div className="form-group">
 					<input
@@ -90,6 +89,7 @@ class LoginForm extends Component {
 					Forgot <a href="#">password?</a>
 				</p>
 				</form>
+
 			</div>
 		);
 	}
