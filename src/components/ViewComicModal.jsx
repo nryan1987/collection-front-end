@@ -27,9 +27,18 @@ class Viewcomicmodal extends Component {
             showModal: false,
             name: "",
             activeItemIndex: 0,
-            slides: []
+            slides: [],
+            numCards: 1
         }
 	}
+    
+    resize() {
+        this.setState({numCards: window.innerWidth <= 760 ? 1 : 5});
+    }
+    
+    componentWillUnmount() {
+        window.removeEventListener("resize", this.resize.bind(this));
+    }
 
     clickSlide = (comicID) => {
         console.log("Slide click: " + comicID);
@@ -43,6 +52,8 @@ class Viewcomicmodal extends Component {
     }
 
     componentDidMount() {
+        window.addEventListener("resize", this.resize.bind(this));
+
         if(this.state.comic != null) {
             this.setState({ isLoading: true });
             var {jwt} = store.getState().user;
@@ -123,7 +134,7 @@ class Viewcomicmodal extends Component {
             chevronWidth={60}
             disableSwipe={false}
             alwaysShowChevrons={false}
-            numberOfCards={5}
+            numberOfCards={this.state.numCards}
             slidesToScroll={1}
             outsideChevron={false}
             showSlither={false}
