@@ -5,6 +5,7 @@ import Table from 'react-bootstrap/Table';
 import { Icon } from "rsuite";
 import NewComicRow from './NewComicRow';
 import { getTitlesAndPublishers } from '../services/comicsService';
+import { getTokenFromLocalStorage } from '../store/actions/jwtActions';
 import "../css/EnterNewComic.css"
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -19,13 +20,19 @@ class EnterNewComic extends Component {
 
     componentDidMount() {
         this.setState({isLoading: true});
-        var {jwt} = store.getState().user;
-        getTitlesAndPublishers(jwt).then(
+        // var {jwt} = store.getState().user;
+        var localStorage = getTokenFromLocalStorage();
+		if(!localStorage) {
+			console.log("token expired");
+			this.props.history.push("/");
+		} else {
+            getTitlesAndPublishers(localStorage.jwt).then(
                 (titlesAndPublishers)=>{
                     this.setState({isLoading: false});
                     this.setState({titlePublishers: titlesAndPublishers});
                 }
             );
+        }
 	}
 
     handleAddClick = () => {

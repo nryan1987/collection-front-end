@@ -1,7 +1,6 @@
 import { host } from "../store/constants";
 
 export default async function getLatestIssues(numIssues, jwt) {
-	console.log("host: ", host);
 	console.log("getLast100Issues - numIssues: ", numIssues);
 	const response = await fetch(host + "/comic/latestIssues", {
 		method: "POST",
@@ -53,7 +52,6 @@ export async function getOneIssue(id, {jwt}) {
 }
 
 export async function getCollectionStats(jwt) {
-	console.log("host: ", host);
 	console.log("getCollectionStats. token: " + jwt);
 
 	const response = await fetch(host + "/comic/collectionStats", {

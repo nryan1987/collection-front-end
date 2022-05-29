@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Navbar, Nav, Dropdown, Icon } from "rsuite";
 import store from "../store/Store";
 import {getCollectionStats} from "../services/comicsService.jsx"
+import { getTokenFromLocalStorage } from "../store/actions/jwtActions";
 import "rsuite/dist/styles/rsuite-default.css";
 import "../css/NavigationBar.css"
 
@@ -19,16 +20,22 @@ class NavigationBar extends Component {
 	}
 
 	componentDidMount() {
-		var {jwt} = store.getState().user;
-		getCollectionStats(jwt).then(
-			(stats)=>{
-				this.setState({ averagePricePaid: stats.averagePricePaid });
-				this.setState({ averageValue: stats.averageValue });
-				this.setState({ countOfComics: stats.countOfComics });
-				this.setState({ sumOfPricePaid: stats.sumOfPricePaid });
-				this.setState({ sumOfValue: stats.sumOfValue });
-			}
-		);
+		// var {jwt} = store.getState().user;
+		var localStorage = getTokenFromLocalStorage();
+		if(!localStorage) {
+			console.log("token expired");
+			this.props.history.push("/");
+		} else {
+			getCollectionStats(localStorage.jwt).then(
+				(stats)=>{
+					this.setState({ averagePricePaid: stats.averagePricePaid });
+					this.setState({ averageValue: stats.averageValue });
+					this.setState({ countOfComics: stats.countOfComics });
+					this.setState({ sumOfPricePaid: stats.sumOfPricePaid });
+					this.setState({ sumOfValue: stats.sumOfValue });
+				}
+			);
+		}
 	}
 
 	goToPage(location) {

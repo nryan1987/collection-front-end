@@ -1,9 +1,6 @@
 import { host } from "../../store/constants";
 
 export default async function getFetchJWTAction(username, password) {
-	console.log("host: ", host);
-	console.log("getFetchJWTAction: ", username, password);
-
 	const response = await fetch(host + "/user/login", {
 		method: "POST",
 		headers: {
@@ -26,4 +23,26 @@ export default async function getFetchJWTAction(username, password) {
 		userSettings: responseJson.userSettings
 	};
 	return jwtAction;
+}
+
+export function getTokenFromLocalStorage() {
+	var userToken = localStorage.getItem("user");
+	var loginTime = localStorage.getItem("loginTime");
+	var userSettings = localStorage.getItem("userSettings");
+	var activeHours = 10;
+
+	console.log("token", userToken);
+	console.log("loginTime", loginTime);
+	console.log("userSettings", JSON.stringify(userSettings));
+
+	if(userToken && loginTime) {
+		var expirationTime = loginTime + (activeHours*60*60*1000)
+
+		if(Date.now() > expirationTime) { //Token expired. Clear localStorage.
+			localStorage.clear();
+			return null;
+		} else {
+			return {jwt: userToken, userSettings: userSettings};
+		}
+	}
 }

@@ -24,7 +24,6 @@ class LoginForm extends Component {
 			store.getState().user.username,
 			store.getState().user.password
 		).then((jwtAction) => {
-			console.log(jwtAction);
 			if (jwtAction.payload === null) {
 				alert(jwtAction.message);
 				this.setState({isLoading: false});
@@ -106,17 +105,18 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		updateUserName: (event) => {
-			console.log("update username: ", event.target.value);
 			const action = { type: "UPDATE_USERNAME", payload: event.target.value };
 			dispatch(action);
 		},
 		updatePassword: (event) => {
-			console.log("update password: ", event.target.value);
 			const action = { type: "UPDATE_PASSWORD", payload: event.target.value };
 			dispatch(action);
 		},
 		updateJWT: (history, jwtAction) => {
 			dispatch(jwtAction);
+			localStorage.setItem("user", jwtAction.payload);
+			localStorage.setItem("userSettings", JSON.stringify(jwtAction.userSettings));
+			localStorage.setItem("loginTime", Date.now());
 			history.push("/main");
 		}
 	};

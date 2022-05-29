@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import store from "../store/Store";
 import { addComicList } from '../services/comicsService';
+import { getTokenFromLocalStorage } from '../store/actions/jwtActions';
 import "../css/Modal.css"
 
 class AddComicsModal extends Component {
@@ -18,18 +19,24 @@ class AddComicsModal extends Component {
 
     onSaveChangesClick = () => {
         this.setState({ loading: true });
-        var {jwt} = store.getState().user;
-        addComicList(jwt,this.props.comicsList).then((response)=>{
-            this.setState({ loading: false });
-            this.setState({ modalText: response.message });
-            if(response.ok){
-                this.props.onSuccessfulAdd();
-            }
-            else {
-                this.setState({errorMap: response.errors});
-                this.setState({ errors: true });
-            }
-        });
+        // var {jwt} = store.getState().user;
+        var localStorage = getTokenFromLocalStorage();
+		if(!localStorage) {
+			console.log("token expired");
+			this.props.history.push("/");
+		} else {
+            addComicList(localStorage.jwt,this.props.comicsList).then((response)=>{
+                this.setState({ loading: false });
+                this.setState({ modalText: response.message });
+                if(response.ok){
+                    this.props.onSuccessfulAdd();
+                }
+                else {
+                    this.setState({errorMap: response.errors});
+                    this.setState({ errors: true });
+                }
+            });
+        }
     }
 
     onHideClick = () => {

@@ -8,6 +8,7 @@ import ItemsCarousel from 'react-items-carousel';
 import store from "../store/Store";
 import Spinner from 'react-bootstrap/Spinner';
 import { getOneIssue, getIssuesByTitle } from '../services/comicsService';
+import { getTokenFromLocalStorage } from '../store/actions/jwtActions';
 import { pic_url } from '../store/constants';
   
 
@@ -42,13 +43,17 @@ class Viewcomicmodal extends Component {
 
     clickSlide = (comicID) => {
         console.log("Slide click: " + comicID);
-
-        getOneIssue(comicID, store.getState().user).then(
-            (res) => {
-                console.log(res);
-                this.setState({comic: res});
-            }
-        );
+        if(!localStorage) {
+			console.log("token expired");
+			this.props.history.push("/");
+		} else {
+            getOneIssue(comicID, localStorage).then(
+                (res) => {
+                    console.log(res);
+                    this.setState({comic: res});
+                }
+            );
+        }
     }
 
     componentDidMount() {
@@ -56,9 +61,14 @@ class Viewcomicmodal extends Component {
 
         if(this.state.comic != null) {
             this.setState({ isLoading: true });
-            var {jwt} = store.getState().user;
+            // var {jwt} = store.getState().user;
+            var localStorage = getTokenFromLocalStorage();
+		if(!localStorage) {
+			console.log("token expired");
+			this.props.history.push("/");
+		} else {
             console.log("Querying series...");
-            getIssuesByTitle(jwt, this.state.comic.title).then(
+            getIssuesByTitle(localStorage.jwt, this.state.comic.title).then(
                     (res)=>{
                         console.log(res);
                         //if(res.ok) {
@@ -84,6 +94,7 @@ class Viewcomicmodal extends Component {
                         // }
                     }
             );
+        }
         }
     }
 

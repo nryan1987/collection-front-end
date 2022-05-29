@@ -6,7 +6,8 @@ import Viewcomicmodal from './components/ViewComicModal';
 import Carousel from 'react-bootstrap/Carousel';
 import ImageCarousel from "./components/ImageCarousel";
 import { View, Image, Text } from "react-native";
-import { host, pic_url } from "./store/constants";
+import { pic_url } from "./store/constants";
+import { getTokenFromLocalStorage } from "./store/actions/jwtActions";
 import "./css/MainMenu.css"
 
 class MainMenu extends Component {
@@ -16,8 +17,6 @@ class MainMenu extends Component {
 
 		console.log("MainMenu props: ", this.props);
 		console.log("Store:", store.getState());
-		console.log("host: ", host);
-		console.log("pic_url: ", pic_url);
 
 		this.state = { carouselSlides: [], isLoading: true, showComicModal: false };
 	}
@@ -28,31 +27,40 @@ class MainMenu extends Component {
 
 	getSlides = () => {
 		this.setState({isLoading: true});
-		var {jwt} = store.getState().user;
-		getLatestIssues(store.getState().user.userSettings.numRecentIssues, jwt).then(
-			(latestIssues)=>{
-				var slides = [];
-				latestIssues.map((comic) => (slides.push(
+		// var {jwt} = store.getState().user;
+		var localStorage = getTokenFromLocalStorage();
+		if(!localStorage) {
+			this.props.history.push("/");
+		} else {
+			var jwt = localStorage.jwt;
+			var userSettings = localStorage.userSettings;
+
+			userSettings = JSON.parse(userSettings);
+			getLatestIssues(userSettings.numRecentIssues, jwt).then(
+				(latestIssues)=>{
+					var slides = [];
+					latestIssues.map((comic) => (slides.push(
 					<View>
-                    <Image
-                      style={{
-                        borderColor: "dark grey",
-                        borderWidth: 5,
-                        borderRadius: 20,
-                      resizeMode: "contain",
-                      height: 425,
-                      width: 300
-                      }}
-                      source={pic_url + comic.picture}
-                    />
-                    <Text>{comic.title + " VOL: " + comic.volume + " #" + comic.issue}</Text>
-                  </View>
+                    	<Image
+                      	style={{
+	                        borderColor: "dark grey",
+    	                    borderWidth: 5,
+        	                borderRadius: 20,
+            	          resizeMode: "contain",
+                	      height: 425,
+                    	  width: 300
+                      	}}
+                      	source={pic_url + comic.picture}
+                    	/>
+                    	<Text>{comic.title + " VOL: " + comic.volume + " #" + comic.issue}</Text>
+                  	</View>
 				)));
 
 				this.setState({ carouselSlides: slides });
 				this.setState({isLoading: false});
 			}
 		);
+		}
 	}
 
 	handleSlideClick = (selectedIndex) => {

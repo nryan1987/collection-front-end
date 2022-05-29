@@ -9,6 +9,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import NavigationBar from './NavigationBar';
 import { getAllComicsPaginated, getOneIssue } from '../services/comicsService';
 import Viewcomicmodal from './ViewComicModal';
+import { getTokenFromLocalStorage } from '../store/actions/jwtActions';
 
 class AllComics extends Component {
     constructor(props) {
@@ -34,8 +35,13 @@ class AllComics extends Component {
         console.log(pageNumber);
         console.log(this.state.searchText);
         this.setState({ isLoading: true });
-        var {jwt} = store.getState().user;
-        getAllComicsPaginated(jwt, pageNumber, this.state.pageSize, this.state.searchText).then(
+        // var {jwt} = store.getState().user;
+        var localStorage = getTokenFromLocalStorage();
+		if(!localStorage) {
+			console.log("token expired");
+			this.props.history.push("/");
+		} else {
+            getAllComicsPaginated(localStorage.jwt, pageNumber, this.state.pageSize, this.state.searchText).then(
                 (res)=>{
                     console.log(res);
                     if(res.ok) {
@@ -63,6 +69,7 @@ class AllComics extends Component {
                     }
                 }
         );
+        }
     }
 
     updatePagination = (activePageNum) => {
@@ -92,13 +99,19 @@ class AllComics extends Component {
     handleComicClicked = (comicID) => {
         console.log("ComicID: " + comicID);
         if(!this.state.showComicModal) {
-            getOneIssue(comicID, store.getState().user).then(
+            var localStorage = getTokenFromLocalStorage();
+		if(!localStorage) {
+			console.log("token expired");
+			this.props.history.push("/");
+		} else {
+            getOneIssue(comicID, localStorage).then(
                 (res) => {
                     console.log(res);
                     this.setState({selectedComic: res});
                     this.setState({showComicModal: true});
                 }
             );
+        }
         }
     }
 
