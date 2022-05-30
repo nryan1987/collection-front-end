@@ -18,8 +18,8 @@ class LoginForm extends Component {
 	}
 
 	componentDidMount() {
-		getHealthCheck().then((ok) => {
-			if(ok === true) {
+		getHealthCheck().then((resposne) => {
+			if(resposne.ok === true) {
 				this.setState({isHealthy: true});
 			} else {
 				this.setState({isHealthy: false});

@@ -1,22 +1,22 @@
 import { host } from "../store/constants";
 
 export default async function getHealthCheck() {
-	await fetch(host + "/app/healthCheck", {
+	const response = await fetch(host + "/app/healthCheck", {
 		method: "GET",
 		headers: {
 			Accept: "application/json",
 			"Content-Type": "application/json"
 		},
 	})
-	.then(response => {
-		console.log("json: ", response);
-		return true;
-	})
 	.catch(error => {
 		console.log(error);
-		return false;
-	}
-	);
+		var res = {
+			ok: false
+		};
+		return res;
+	});
+
+	return response;
 }
 
 export async function getLatestIssues(numIssues, jwt) {
@@ -54,8 +54,6 @@ export async function getIssuesByTitle(jwt, title) {
 }
 
 export async function getOneIssue(id, {jwt}) {
-	console.log("getOneIssue");
-
 	const response = await fetch(host + "/comic/"+id, {
 		method: "GET",
 		headers: {
@@ -71,8 +69,6 @@ export async function getOneIssue(id, {jwt}) {
 }
 
 export async function getCollectionStats(jwt) {
-	console.log("getCollectionStats. token: " + jwt);
-
 	const response = await fetch(host + "/comic/collectionStats", {
 		method: "GET",
 		headers: {
@@ -88,8 +84,6 @@ export async function getCollectionStats(jwt) {
 }
 
 export async function getTitlesAndPublishers(jwt) {
-	console.log("getCollectionStats. token: " + jwt);
-
 	const response = await fetch(host + "/comic/titles", {
 		method: "GET",
 		headers: {
