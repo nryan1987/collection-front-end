@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import getFetchJWTAction from "../store/actions/jwtActions";
+import getHealthCheck from "../services/comicsService";
 import { connect } from "react-redux";
 import store from "../store/Store";
 import heroes from "../images/heroes.gif"
@@ -13,7 +14,18 @@ class LoginForm extends Component {
 		console.log("LoginForm props: ", this.props);
 		console.log("Store:", store.getState());
 
-		this.state = { isLoading: false };
+		this.state = { isHealthy: false, isLoading: false };
+	}
+
+	componentDidMount() {
+		getHealthCheck().then((ok) => {
+			if(ok === true) {
+				this.setState({isHealthy: true});
+			} else {
+				this.setState({isHealthy: false});
+			}
+		}
+		);
 	}
 
 	handleLoginSubmit = (e) => {
@@ -41,6 +53,9 @@ class LoginForm extends Component {
 	};
 
 	render() {
+		if(!this.state.isHealthy){
+			return (<div>Host is not responding to health checks: {host}</div>);
+		}
 		return (
 			<div className="mainDiv">
 				<img className="mainImg" src={heroes} />
@@ -88,7 +103,6 @@ class LoginForm extends Component {
 				<p className="forgot-password text-right">
 					Forgot <a href="#">password?</a>
 				</p>
-				<div>Host: {host}</div>
 				</form>
 
 			</div>

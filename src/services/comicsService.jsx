@@ -1,6 +1,25 @@
 import { host } from "../store/constants";
 
-export default async function getLatestIssues(numIssues, jwt) {
+export default async function getHealthCheck() {
+	await fetch(host + "/app/healthCheck", {
+		method: "GET",
+		headers: {
+			Accept: "application/json",
+			"Content-Type": "application/json"
+		},
+	})
+	.then(response => {
+		console.log("json: ", response);
+		return true;
+	})
+	.catch(error => {
+		console.log(error);
+		return false;
+	}
+	);
+}
+
+export async function getLatestIssues(numIssues, jwt) {
 	console.log("getLast100Issues - numIssues: ", numIssues);
 	const response = await fetch(host + "/comic/latestIssues", {
 		method: "POST",
