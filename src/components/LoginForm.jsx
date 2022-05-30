@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import store from "../store/Store";
 import heroes from "../images/heroes.gif"
 import "../css/LoginForm.css"
+import { host } from "../store/constants";
 
 class LoginForm extends Component {
 	constructor(props) {
@@ -18,7 +19,7 @@ class LoginForm extends Component {
 	handleLoginSubmit = (e) => {
 		e.preventDefault();
 		this.setState({isLoading: true});
-		console.log("Login submit: ", this.props.history);
+		console.log("Login submitted");
 		
 		getFetchJWTAction(
 			store.getState().user.username,
@@ -87,6 +88,7 @@ class LoginForm extends Component {
 				<p className="forgot-password text-right">
 					Forgot <a href="#">password?</a>
 				</p>
+				<div>Host: {host}</div>
 				</form>
 
 			</div>
