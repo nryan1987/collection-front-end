@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import NavigationBar from "./components/NavigationBar";
 import store from "./store/Store";
-import getLatestIssues from "./services/comicsService";
+import { getLatestIssues } from "./services/comicsService";
 import Viewcomicmodal from './components/ViewComicModal';
 import Carousel from 'react-bootstrap/Carousel';
 import ImageCarousel from "./components/ImageCarousel";
@@ -35,8 +35,8 @@ class MainMenu extends Component {
 			var jwt = localStorage.jwt;
 			var userSettings = localStorage.userSettings;
 
-			userSettings = JSON.parse(userSettings);
-			getLatestIssues(userSettings.numRecentIssues, jwt).then(
+			var userSettingsJSON = JSON.parse(userSettings);
+			getLatestIssues(userSettingsJSON.numRecentIssues, jwt).then(
 				(latestIssues)=>{
 					var slides = [];
 					latestIssues.map((comic) => (slides.push(
