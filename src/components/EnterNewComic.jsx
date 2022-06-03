@@ -14,7 +14,7 @@ class EnterNewComic extends Component {
     constructor(props) {
 		super(props);
 
-		this.state = { showModal: false, comicRows: [], comics: [], titlePublishers:[], isLoading: true, currentIndex: 1, pricePaidTotal: 0.0, isValid:true, invalidEntries:[] };
+		this.state = { showModal: false, comicRows: [], comics: [], titlePublishers:[], isLoading: true, currentIndex: 1, pricePaidTotal: 0.0};
 	}
 
     componentDidMount() {
@@ -36,7 +36,7 @@ class EnterNewComic extends Component {
 
     handleAddClick = () => {
         console.log("handleAddClick");
-        var rows = this.state.comicRows;
+        var rows = [...this.state.comicRows];
         rows.push(<NewComicRow key={this.state.currentIndex} id={this.state.currentIndex}
              titlesList={this.state.titlePublishers}
              onDelete={this.handleRemoveClick}
@@ -50,7 +50,8 @@ class EnterNewComic extends Component {
 
         var comics = this.state.comics;
         comics.push({id: this.state.currentIndex,
-            pricePaid: 0.0
+            pricePaid: 0.0,
+            isValid: false
         });
 
         this.setState({ comicRows: rows });
@@ -116,7 +117,7 @@ class EnterNewComic extends Component {
     }
 
     handlePublisherChange = (rowId, publisher, isValid) => {
-        console.log("handlePublisherChange: " + rowId + " " + publisher);
+        console.log("handlePublisherChange: " + rowId + " " + publisher + " " + isValid);
         var comicsCopy = [...this.state.comics];
         var index = comicsCopy.findIndex((c) => c.id === rowId);
 
@@ -177,7 +178,6 @@ class EnterNewComic extends Component {
         comicsCopy[index] = comicToUpdate;
 
         this.setState({ comics: comicsCopy });
-
     }
 
     updateTotalPricePaid = (comics) => {
@@ -191,7 +191,7 @@ class EnterNewComic extends Component {
     checkListIsValid = () => {
         var isListValid = true;
         this.state.comics.map((c) => {
-            if(c.isValid !== undefined && !c.isValid) {
+            if(!c.isValid) {
                 isListValid = false;
             }
         });
