@@ -7,3 +7,6 @@ export const initialState = {
 	jwt: "",
 	userSettings: {}
 };
+
+//DB Constants
+export const MAX_TITLE_LENGTH=60;

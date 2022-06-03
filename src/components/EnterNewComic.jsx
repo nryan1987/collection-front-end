@@ -7,15 +7,14 @@ import NewComicRow from './NewComicRow';
 import { getTitlesAndPublishers } from '../services/comicsService';
 import { getTokenFromLocalStorage } from '../store/actions/jwtActions';
 import "../css/EnterNewComic.css"
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Tooltip from "@material-ui/core/Tooltip";
 import AddComicsModal from './AddComicsModal';
 
 class EnterNewComic extends Component {
     constructor(props) {
 		super(props);
 
-		this.state = { showModal: false, comicRows: [], comics: [], titlePublishers:[], isLoading: true, currentIndex: 1, pricePaidTotal: 0.0 };
+		this.state = { showModal: false, comicRows: [], comics: [], titlePublishers:[], isLoading: true, currentIndex: 1, pricePaidTotal: 0.0, isValid:true, invalidEntries:[] };
 	}
 
     componentDidMount() {
@@ -81,9 +80,6 @@ class EnterNewComic extends Component {
     }
 
     handleAddComicList = () => {
-        var {jwt} = store.getState().user;
-        //addComicList(jwt,this.state.comics);
-
         this.setState({ showModal: true });
     }
 
@@ -106,25 +102,27 @@ class EnterNewComic extends Component {
         this.setState({ comicRows: comicRowCopy });
     }
 
-    handleTitleChange = (rowId, title) => {
-        console.log("handleTitleChange: " + rowId + " " + title);
+    handleTitleChange = (rowId, title, isValid) => {
+        console.log("handleTitleChange: " + rowId + " " + title + " " + isValid);
         var comicsCopy = [...this.state.comics];
         var index = comicsCopy.findIndex((c) => c.id === rowId);
 
         var comicToUpdate = this.state.comics[index];
         comicToUpdate.title = title;
+        comicToUpdate.isValid = isValid;
         comicsCopy[index] = comicToUpdate;
 
         this.setState({ comics: comicsCopy });
     }
 
-    handlePublisherChange = (rowId, publisher) => {
+    handlePublisherChange = (rowId, publisher, isValid) => {
         console.log("handlePublisherChange: " + rowId + " " + publisher);
         var comicsCopy = [...this.state.comics];
         var index = comicsCopy.findIndex((c) => c.id === rowId);
 
         var comicToUpdate = this.state.comics[index];
         comicToUpdate.publisher = publisher;
+        comicToUpdate.isValid = isValid;
         comicsCopy[index] = comicToUpdate;
 
         this.setState({ comics: comicsCopy });
@@ -190,11 +188,23 @@ class EnterNewComic extends Component {
         this.setState({ pricePaidTotal: pricePaidSum });
     }
 
+    checkListIsValid = () => {
+        var isListValid = true;
+        this.state.comics.map((c) => {
+            if(c.isValid !== undefined && !c.isValid) {
+                isListValid = false;
+            }
+        });
+
+        return isListValid;
+    }
+
     hideModal = () => {
         this.setState({ showModal: false });
     }
 
     render() {
+        var isListValid = this.checkListIsValid();
         return (
             <div>
                 <NavigationBar history={this.props.history}/>
@@ -205,7 +215,18 @@ class EnterNewComic extends Component {
                             <th className="titleHeader">Title</th>
                             <th className="numberHeader">Volume</th>
                             <th className="numberHeader">Issue Number</th>
-                            <th>Notes</th>
+                            <th>
+                            <Tooltip
+                                title="Separate multiple notes with a semicolon ( ; )"
+                                placement="top"
+                                arrow
+                            >
+                                <div>
+                                    Notes
+                                    <Icon icon="info" style={{paddingLeft:"5px"}}/>
+                                </div>
+                            </Tooltip>
+                            </th>
                             <th className="publisherHeader">Publisher</th>
                             <th className="numberHeader">Price Paid</th>
                         </tr>
@@ -241,6 +262,7 @@ class EnterNewComic extends Component {
                     <button onClick={this.handleAddComicList}
 					    	type="submit"
 						    className="btn navBarButton"
+                            disabled={!isListValid}
 				    >
 					    <Icon icon="plus" /> Add comic list
 				    </button>

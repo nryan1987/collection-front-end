@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Icon } from "rsuite";
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import Tooltip from "@material-ui/core/Tooltip";
+import { MAX_TITLE_LENGTH } from '../store/constants';
 
 
 class NewComicRow extends Component {
@@ -30,13 +32,13 @@ class NewComicRow extends Component {
             this.setState({title: pub[0].title});
             this.setState({publisher: pub[0].publisher});
             this.setState({volume: pub[0].volume});
-            this.props.onTitleChange(this.props.id, pub[0].title);
-            this.props.onPublisherChange(this.props.id, pub[0].publisher);
+            this.props.onTitleChange(this.props.id, pub[0].title, pub[0].title.length <= MAX_TITLE_LENGTH);
+            this.props.onPublisherChange(this.props.id, pub[0].publisher, this.validatePublisher(pub[0].publisher));
             this.props.onVolumeChange(this.props.id, pub[0].volume);
         }
         else {
             this.setState({title: e.target.value});
-            this.props.onTitleChange(this.props.id, e.target.value);
+            this.props.onTitleChange(this.props.id, e.target.value, e.target.value.length <= MAX_TITLE_LENGTH);
             //this.props.onPublisherChange(this.props.id, "");
         }
     }
@@ -45,7 +47,7 @@ class NewComicRow extends Component {
         console.log("handlePublisherSelect -" + this.props.id + "-" + e.target.value);
         console.log(this.state);
 
-        this.props.onPublisherChange(this.props.id, e.target.value);
+        this.props.onPublisherChange(this.props.id, e.target.value, this.validatePublisher(e.target.value));
     }
 
     handleVolumeChange = (e) => {
@@ -84,8 +86,11 @@ class NewComicRow extends Component {
         this.props.onPricePaidChange(this.props.id, +e.target.value);
     }
 
+    validatePublisher = (publisher) => {
+        return publisher !== null && publisher !== undefined && publisher.length > 0;
+    }
+
     render() {
-        console.log(this.props.titlesList);
         var removeButton = <button onClick={() => this.props.onDelete(this.props.id)}
                                     type="submit">
                                     <Icon icon="minus" />Remove
@@ -97,42 +102,54 @@ class NewComicRow extends Component {
         return (
             <tr>
                 <td>{removeButton}</td>
-                <td>
-                    <Autocomplete
-                        onSelect={this.handleTitleSelect}
-                        freeSolo
-                        options={titles}
-                        renderInput={(params) => (
-                            <TextField {...params} label="Title" margin="normal" variant="outlined" />
-                        )}
-                    />
+                <td style={{ backgroundColor: this.state.title.length > MAX_TITLE_LENGTH ? 'lightcoral': ''}}>
+                    <Tooltip
+                        title={"Title length must be " + MAX_TITLE_LENGTH + " characters or less."}
+                        placement="top"
+                        arrow
+                        open={this.state.title.length > MAX_TITLE_LENGTH}
+                    >        
+                        <Autocomplete
+                            onSelect={this.handleTitleSelect}
+                            freeSolo
+                            options={titles}
+                            renderInput={(params) => (
+                                <TextField {...params} label="Title" margin="normal" variant="outlined" />
+                            )}
+                        />
+                    </Tooltip>
                 </td>
-                <td><TextField label="Volume" value={this.state.volume} margin="normal" variant="outlined" onChange={this.handleVolumeChange} /></td>
-                <td><TextField label="Issue" margin="normal" variant="outlined" onChange={this.handleIssueChange} /></td>
-                <td><TextField label="Notes" margin="normal" variant="outlined" onChange={this.handleNoteChange} /></td>
-                <td>
+                <td><TextField label="Volume" style={{width:"100%"}} value={this.state.volume} margin="normal" variant="outlined" onChange={this.handleVolumeChange} /></td>
+                <td><TextField label="Issue" style={{width:"100%"}} margin="normal" variant="outlined" onChange={this.handleIssueChange} /></td>
+                <td><TextField label="Notes" style={{width:"100%"}} margin="normal" variant="outlined" onChange={this.handleNoteChange} /></td>
+                <td style={{ backgroundColor: !this.validatePublisher(this.state.publisher) ? 'lightcoral': ''}}>
+                <Tooltip
+                        title={"Publisher must be present."}
+                        placement="top"
+                        arrow
+                        open={!this.validatePublisher(this.state.publisher)}
+                    >
                     <Autocomplete
                         onSelect={this.handlePublisherSelect}
                         freeSolo
                         value={this.state.publisher}
                         onChange={(event, newValue) => {
-                            console.log("change: ", newValue);
                             this.setState({publisher: newValue});
-                            this.props.onPublisherChange(this.props.id, newValue);
+                            this.props.onPublisherChange(this.props.id, newValue, this.validatePublisher(newValue));
                           }}
                         inputValue={this.state.publisherInput}
                         onInputChange={(event, newInputValue) => {
-                            console.log("input change: ", newInputValue);
                             this.setState({publisherInput: newInputValue});
-                            this.props.onPublisherChange(this.props.id, newInputValue);
+                            this.props.onPublisherChange(this.props.id, newInputValue, this.validatePublisher(newInputValue));
                           }}
                         options={publishers}
                         renderInput={(params) => (
                             <TextField {...params} label="Publisher" margin="normal" variant="outlined" />
                         )}
                     />
+                    </Tooltip>
                 </td>
-                <td><TextField label="Price Paid" margin="normal" variant="outlined" onChange={this.handlePricePaidChange} /></td>
+                <td><TextField label="Price Paid" style={{width:"100%"}} margin="normal" variant="outlined" onChange={this.handlePricePaidChange} /></td>
             </tr>
         );
     }
