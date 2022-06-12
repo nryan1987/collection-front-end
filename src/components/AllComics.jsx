@@ -10,26 +10,27 @@ import NavigationBar from './NavigationBar';
 import { getAllComicsPaginated, getOneIssue } from '../services/comicsService';
 import Viewcomicmodal from './ViewComicModal';
 import { getTokenFromLocalStorage } from '../store/actions/jwtActions';
+import "../css/Components.css"
 
 class AllComics extends Component {
     constructor(props) {
 		super(props);
 
-		this.state = { pageList:[], pagination: [], numPages:0, isLoading:false, searchText:null, pageSize:500, selectedComic: null, showComicModal: false };
+		this.state = { pageList:[], pagination: [], numPages:0, currentPage:0, isLoading:false, searchText:null, pageSize:500, selectedComic: null, showComicModal: false, isMobile: window.innerWidth <= 760 ? true : false };
 	}
 
     componentDidMount() {
-        this.updateList(0);
-
-        /*var {jwt} = store.getState().user;
-        getCollectionStats(jwt).then(
-			(stats)=>{
-                console.log("Stats: ", stats);
-				this.setState({ countOfComics: stats.countOfComics });
-                this.updatePagination(1);
-			}
-		);*/
+        window.addEventListener("resize", this.resize.bind(this));
+        this.updateList(this.state.currentPage);
 	}
+
+    componentWillUnmount() {
+        window.removeEventListener("resize", this.resize.bind(this));
+    }
+
+    resize() {
+        this.setState({isMobile: window.innerWidth <= 760 ? true : false});
+    }
 
     updateList = (pageNumber) => {
         console.log(pageNumber);
@@ -160,12 +161,12 @@ class AllComics extends Component {
                         Search
                     </Button>
                 </InputGroup>
-                <Pagination size="sm" style={{ display: "flex", justifyContent: "center" }}>{this.state.pagination}</Pagination>
+                <Pagination size="sm" classname="pagination">{this.state.pagination}</Pagination>
                 <Spinner animation="border" role="status" hidden={!this.state.isLoading}>
                     {/* <span className="visually-hidden">Loading...</span> */}
                 </Spinner>
                 {!this.state.isLoading && results}
-                <Pagination size="sm" style={{ display: "flex", justifyContent: "center" }}>{this.state.pagination}</Pagination>
+                <Pagination size="sm" classname="pagination">{this.state.pagination}</Pagination>
                 { this.state.showComicModal ? 
                     <Viewcomicmodal showModal={this.state.showComicModal} comic={this.state.selectedComic} onHide={this.hideComicModal}/>
                     : 
