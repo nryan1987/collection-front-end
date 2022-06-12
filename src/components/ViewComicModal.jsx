@@ -29,7 +29,7 @@ class Viewcomicmodal extends Component {
             name: "",
             activeItemIndex: 0,
             slides: [],
-            numCards: 1
+            numCards: window.innerWidth <= 760 ? 1 : 5
         }
 	}
     
@@ -43,6 +43,7 @@ class Viewcomicmodal extends Component {
 
     clickSlide = (comicID) => {
         console.log("Slide click: " + comicID);
+        var localStorage = getTokenFromLocalStorage();
         if(!localStorage) {
 			console.log("token expired");
 			this.props.history.push("/");
@@ -137,7 +138,7 @@ class Viewcomicmodal extends Component {
         if(this.state.isLoading) {
             carousel = <Spinner animation="border" role="status"></Spinner>;
         }
-        else {
+        else if(this.state.slides.length > 1) {
             carousel = <ItemsCarousel
             infiniteLoop={false}
             gutter={12}
