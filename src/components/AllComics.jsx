@@ -10,13 +10,15 @@ import NavigationBar from './NavigationBar';
 import { getAllComicsPaginated, getOneIssue } from '../services/comicsService';
 import Viewcomicmodal from './ViewComicModal';
 import { getTokenFromLocalStorage } from '../store/actions/jwtActions';
+import { maxMobilePagination } from '../store/constants';
+import { mobileCheck } from '../services/Utilities';
 import "../css/Components.css"
 
 class AllComics extends Component {
     constructor(props) {
 		super(props);
 
-		this.state = { pageList:[], pagination: [], numPages:0, currentPage:0, isLoading:false, searchText:null, pageSize:500, selectedComic: null, showComicModal: false, isMobile: window.innerWidth <= 760 ? true : false };
+		this.state = { pageList:[], pagination: [], numPages:0, currentPage:0, isLoading:false, searchText:null, pageSize:500, selectedComic: null, showComicModal: false, isMobile: mobileCheck() };
 	}
 
     componentDidMount() {
@@ -29,7 +31,7 @@ class AllComics extends Component {
     }
 
     resize() {
-        this.setState({isMobile: window.innerWidth <= 760 ? true : false});
+        this.setState({isMobile: mobileCheck()});
     }
 
     updateList = (pageNumber) => {
@@ -62,6 +64,7 @@ class AllComics extends Component {
                         this.setState({pageList: page});
                         this.setState({ isLoading: false });
                         this.setState({ numPages: res.totalPages });
+                        this.setState({currentPage: pageNumber+1});
                         this.updatePagination(pageNumber+1);
                         console.log(res.message);
                     }
@@ -76,20 +79,50 @@ class AllComics extends Component {
     updatePagination = (activePageNum) => {
         let items = [];
         let numPages = Math.ceil(this.state.numPages);
-        for (let number = 1; number <= numPages; number++) {
+        let numPagesToDisplay = mobileCheck() ? maxMobilePagination : numPages;
+
+        items.push(<Pagination.First onClick={(e)=>{this.handleOnClickNav(1)}}/>);
+        items.push(<Pagination.Prev onClick={(e)=>{this.handleOnClickNav(this.state.currentPage - 1)}}/>);
+
+        let startNum = 0;
+        let endNum = 0;
+
+        for(let number = 0; number < Math.ceil(numPages/numPagesToDisplay); number++) {
+            startNum = 1 + (numPagesToDisplay*number);
+            endNum = numPagesToDisplay + (numPagesToDisplay*number);
+
+            if(activePageNum <= endNum && activePageNum >= startNum) {
+                break;
+            }
+        }
+
+        if(startNum > 1) {
+            items.push(<Pagination.Ellipsis/>);
+        }
+
+        for(let number = startNum; number <= endNum && number <= numPages; number++) {
             items.push(
-                <Pagination.Item key={number} active={number === activePageNum} onClick={(e)=>{this.handleOnClick(e)}}>
+                <Pagination.Item key={number} active={number === activePageNum} onClick={(e)=>{this.handleOnClickNav(number)}}>
                     {number}
-                </Pagination.Item>,
+                </Pagination.Item>
             );
         }
+
+        if(endNum < numPages) {
+            items.push(<Pagination.Ellipsis/>);
+        }
+
+        items.push(<Pagination.Next onClick={(e)=>{this.handleOnClickNav(this.state.currentPage + 1)}}/>);
+        items.push(<Pagination.Last onClick={(e)=>{this.handleOnClickNav(this.state.numPages)}}/>);
         this.setState({pagination: items});
     }
 
-    handleOnClick = (e) => {
-        console.log(e.target.text);
-        this.updatePagination(parseInt(e.target.text));
-        this.updateList(parseInt(e.target.text) - 1);
+    handleOnClickNav = (pageNum) => {
+        if(pageNum > 0 && pageNum <= this.state.numPages && pageNum != this.state.currentPage) {
+            this.setState({currentPage: pageNum});
+            this.updatePagination(pageNum);
+            this.updateList(pageNum - 1);
+        }
     }
     
     handleSearchClick = () => {

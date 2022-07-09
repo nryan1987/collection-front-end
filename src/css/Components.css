@@ -2,12 +2,3 @@
     justify-content: center;
     display: flex;
 }
-
-@media only screen and (max-width: 760px) {
-    /* For mobile phones: */
-    [class*="pagination"] {
-        justify-content: left;
-        display: flex;
-    }
-  }
-  
