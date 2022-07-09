@@ -97,7 +97,7 @@ class AllComics extends Component {
         }
 
         if(startNum > 1) {
-            items.push(<Pagination.Ellipsis/>);
+            items.push(<Pagination.Ellipsis onClick={(e)=>{this.handleOnClickNav(startNum - numPagesToDisplay)}}/>);
         }
 
         for(let number = startNum; number <= endNum && number <= numPages; number++) {
@@ -109,7 +109,7 @@ class AllComics extends Component {
         }
 
         if(endNum < numPages) {
-            items.push(<Pagination.Ellipsis/>);
+            items.push(<Pagination.Ellipsis onClick={(e)=>{this.handleOnClickNav(endNum + 1)}}/>);
         }
 
         items.push(<Pagination.Next onClick={(e)=>{this.handleOnClickNav(this.state.currentPage + 1)}}/>);
