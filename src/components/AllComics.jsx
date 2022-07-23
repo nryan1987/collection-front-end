@@ -18,7 +18,7 @@ class AllComics extends Component {
     constructor(props) {
 		super(props);
 
-		this.state = { pageList:[], pagination: [], numPages:0, currentPage:0, isLoading:false, searchText:null, pageSize:500, selectedComic: null, showComicModal: false, isMobile: mobileCheck() };
+		this.state = { pageList:[], pagination: [], numPages:0, currentPage:0, isLoading:false, searchText:null, pageSize:500, selectedComicId:0, showComicModal: false, isMobile: mobileCheck() };
 	}
 
     componentDidMount() {
@@ -54,11 +54,11 @@ class AllComics extends Component {
                             <td style={{ textAlign:"left" }}>{c.title}</td>
                             <td style={{ width:"5%" }}>{c.volume}</td>
                             <td style={{ width:"5%" }}>{c.issue}</td>
-                            <td>{c.publicationDate}</td>
+                            <td style={{ width:"8%"}}>{c.publicationDate}</td>
                             <td>{c.notes}</td>
                             <td>{c.publisher}</td>
-                            <td style={{ textAlign:"right" }}>${c.pricePaid.toFixed(2)}</td>
-                            <td style={{ textAlign:"right" }}>${c.value.toFixed(2)}</td>
+                            <td style={{ width:"5%", textAlign:"right" }}>${c.pricePaid.toFixed(2)}</td>
+                            <td style={{ width:"5%", textAlign:"right" }}>${c.value.toFixed(2)}</td>
                             <td>{c.condition}</td>
                         </tr>)});
                         this.setState({pageList: page});
@@ -132,21 +132,8 @@ class AllComics extends Component {
 
     handleComicClicked = (comicID) => {
         console.log("ComicID: " + comicID);
-        if(!this.state.showComicModal) {
-            var localStorage = getTokenFromLocalStorage();
-		if(!localStorage) {
-			console.log("token expired");
-			this.props.history.push("/");
-		} else {
-            getOneIssue(comicID, localStorage).then(
-                (res) => {
-                    console.log(res);
-                    this.setState({selectedComic: res});
-                    this.setState({showComicModal: true});
-                }
-            );
-        }
-        }
+        this.setState({selectedComicId: comicID});
+        this.setState({showComicModal: true});
     }
 
     hideComicModal = () => {
@@ -201,7 +188,7 @@ class AllComics extends Component {
                 {!this.state.isLoading && results}
                 <Pagination size="sm" classname="pagination">{this.state.pagination}</Pagination>
                 { this.state.showComicModal ? 
-                    <Viewcomicmodal showModal={this.state.showComicModal} comic={this.state.selectedComic} onHide={this.hideComicModal}/>
+                    <Viewcomicmodal showModal={this.state.showComicModal} comicID={this.state.selectedComicId} onHide={this.hideComicModal}/>
                     : 
                     null 
                 }

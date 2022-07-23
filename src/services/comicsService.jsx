@@ -11,7 +11,8 @@ export default async function getHealthCheck() {
 	.catch(error => {
 		console.log(error);
 		var res = {
-			ok: false
+			ok: false,
+			error: error
 		};
 		return res;
 	});
@@ -29,6 +30,14 @@ export async function getLatestIssues(numIssues, jwt) {
 			"Authorization": "Bearer " + jwt
 		},
 		body: numIssues,
+	})
+	.catch(error => {
+		console.log(error);
+		var res = {
+			ok: false,
+			error: error
+		};
+		return res;
 	});
 	const responseJson = await response.json();
 	console.log("json: ", responseJson);
@@ -46,6 +55,14 @@ export async function getIssuesByTitle(jwt, title) {
 			"Authorization": "Bearer " + jwt
 		},
 		body: title,
+	})
+	.catch(error => {
+		console.log(error);
+		var res = {
+			ok: false,
+			error: error
+		};
+		return res;
 	});
 	const responseJson = await response.json();
 	console.log("json: ", responseJson);
@@ -61,7 +78,16 @@ export async function getOneIssue(id, {jwt}) {
 			"Content-Type": "application/json",
 			"Authorization": "Bearer " + jwt
 		},
+	})
+	.catch(error => {
+		console.log(error);
+		var res = {
+			ok: false,
+			error: error
+		};
+		return res;
 	});
+	console.log("response: ", response);
 	const responseJson = await response.json();
 	console.log("json: ", responseJson);
 
@@ -76,6 +102,14 @@ export async function getCollectionStats(jwt) {
 			"Content-Type": "application/json",
 			"Authorization": "Bearer " + jwt
 		},
+	})
+	.catch(error => {
+		console.log(error);
+		var res = {
+			ok: false,
+			error: error
+		};
+		return res;
 	});
 	const responseJson = await response.json();
 	console.log("json: ", responseJson);
@@ -91,6 +125,14 @@ export async function getTitlesAndPublishers(jwt) {
 			"Content-Type": "application/json",
 			"Authorization": "Bearer " + jwt
 		},
+	})
+	.catch(error => {
+		console.log(error);
+		var res = {
+			ok: false,
+			error: error
+		};
+		return res;
 	});
 	const responseJson = await response.json();
 	console.log("json: ", responseJson);
@@ -110,6 +152,46 @@ export async function addComicList(jwt, comicArray) {
 			"Authorization": "Bearer " + jwt
 		},
 		body: JSON.stringify(comicArray),
+	})
+	.catch(error => {
+		console.log(error);
+		var res = {
+			ok: false,
+			error: error
+		};
+		return res;
+	});
+	const responseJson = await response.json();
+
+	var res = {
+		...responseJson,
+		status: response.status,
+		ok: response.ok
+	};
+
+	return res;
+}
+
+export async function updateComic(jwt, comic) {
+	console.log(comic);
+	console.log(JSON.stringify(comic));
+
+	const response = await fetch(host + "/comic/updateComic", {
+		method: "POST",
+		headers: {
+			Accept: "application/json",
+			"Content-Type": "application/json",
+			"Authorization": "Bearer " + jwt
+		},
+		body: JSON.stringify(comic),
+	})
+	.catch(error => {
+		console.log(error);
+		var res = {
+			ok: false,
+			error: error
+		};
+		return res;
 	});
 	const responseJson = await response.json();
 
@@ -135,6 +217,14 @@ export async function getAllComicsPaginated(jwt, pageNumber, pageSize, searchTer
 			"Authorization": "Bearer " + jwt
 		},
 		body: searchTerm
+	})
+	.catch(error => {
+		console.log(error);
+		var res = {
+			ok: false,
+			error: error
+		};
+		return res;
 	});
 
 	const responseJson = await response.json();

@@ -11,3 +11,6 @@ export const initialState = {
 
 //DB Constants
 export const MAX_TITLE_LENGTH=60;
+
+//Defaults
+export const DEFAULT_FILE_EXTENSION='.jpg';

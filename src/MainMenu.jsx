@@ -9,6 +9,7 @@ import { View, Image, Text } from "react-native";
 import { pic_url } from "./store/constants";
 import { getTokenFromLocalStorage } from "./store/actions/jwtActions";
 import "./css/MainMenu.css"
+import { TouchableOpacity } from "react-native-web";
 
 class MainMenu extends Component {
 	pictureIntervalMS = 2000;
@@ -18,7 +19,7 @@ class MainMenu extends Component {
 		console.log("MainMenu props: ", this.props);
 		console.log("Store:", store.getState());
 
-		this.state = { carouselSlides: [], isLoading: true, showComicModal: false };
+		this.state = { carouselSlides: [], isLoading: true, selectedComicId: 0, showComicModal: false };
 	}
 
 	componentDidMount() {
@@ -41,18 +42,21 @@ class MainMenu extends Component {
 					var slides = [];
 					latestIssues.map((comic) => (slides.push(
 					<View>
+						<TouchableOpacity onPress={() => this.handleSlideClick(comic.comicID)}>
                     	<Image
                       	style={{
 	                        borderColor: "dark grey",
     	                    borderWidth: 5,
         	                borderRadius: 20,
             	          resizeMode: "contain",
-                	      height: 425,
-                    	  width: 300
+                	      height: undefined,
+                    	  width: '95%',
+						  aspectRatio: 1
                       	}}
                       	source={pic_url + comic.picture}
                     	/>
                     	<Text>{comic.title + " VOL: " + comic.volume + " #" + comic.issue}</Text>
+						</TouchableOpacity>
                   	</View>
 				)));
 
@@ -63,9 +67,10 @@ class MainMenu extends Component {
 		}
 	}
 
-	handleSlideClick = (selectedIndex) => {
-		console.log(selectedIndex);
-
+	handleSlideClick = (comicID) => {
+		console.log(comicID);
+		this.setState({selectedComicId: comicID});
+        this.setState({showComicModal: true});
 	}
 
 	handleSelect = (selectedIndex, e) => {
@@ -74,6 +79,11 @@ class MainMenu extends Component {
 			this.getSlides();
 		}
 	  };
+
+	hideComicModal = () => {
+        console.log("Updating showComicModal");
+        this.setState({showComicModal: false});
+    }
 
 	render() {
 		const isLoading = this.state.isLoading;
@@ -90,7 +100,11 @@ class MainMenu extends Component {
 				</div>
 				<div className="bottom-container" style={{float:"left"}}>div2</div>
 				<div className="bottom-container" style={{float:"right"}}>div3</div>
-				<Viewcomicmodal showModal={this.state.showComicModal} comic={this.state.selectedComic} onHide={this.hideComicModal}/>
+				{ this.state.showComicModal ? 
+                    <Viewcomicmodal showModal={this.state.showComicModal} comicID={this.state.selectedComicId} onHide={this.hideComicModal}/>
+                    : 
+                    null 
+                }
 			</div>
 		);
 	}

@@ -7,34 +7,43 @@ import Button from 'react-bootstrap/Button';
 import ItemsCarousel from 'react-items-carousel';
 import store from "../store/Store";
 import Spinner from 'react-bootstrap/Spinner';
-import { getOneIssue, getIssuesByTitle } from '../services/comicsService';
+import { getOneIssue, getIssuesByTitle, updateComic } from '../services/comicsService';
 import { getTokenFromLocalStorage } from '../store/actions/jwtActions';
-import { pic_url } from '../store/constants';
-  
+import { pic_url, DEFAULT_FILE_EXTENSION } from '../store/constants';
+import { mobileCheck, doesPictureExist } from '../services/Utilities';
 
+function generatePictureFileName (title, volume, issue) {
+    let fileName = title + "_" + volume + "_" + issue;
+    const charactersToRemoveRegex = /[.:',]/g;
+    const charactersToUnderScoreRegex = /[ /\\]/g;
+
+    fileName = fileName.replace(charactersToRemoveRegex, '');
+    fileName = fileName.replace(charactersToUnderScoreRegex, '_');
+    fileName = fileName + DEFAULT_FILE_EXTENSION;
+    
+    return fileName;
+}
+  
 class Viewcomicmodal extends Component {
     constructor(props) {
 		super(props);
 
+        console.log("inner width: ", window.innerWidth);
         this.state = {
-            comic: this.props.comic,
+            comic: null,
+            displayComic: null,
             isLoading: false,
             errors: false,
             errorMap: [],
-            comicTitle: "",
-            comicVolume: 0,
-            comicIssue: 0,
-            picture: "",
             showModal: false,
-            name: "",
             activeItemIndex: 0,
             slides: [],
-            numCards: window.innerWidth <= 760 ? 1 : 5
+            numCards: mobileCheck() ? 1 : 5
         }
 	}
     
     resize() {
-        this.setState({numCards: window.innerWidth <= 760 ? 1 : 5});
+        this.setState({numCards: mobileCheck() <= 760 ? 1 : 5});
     }
     
     componentWillUnmount() {
@@ -50,8 +59,11 @@ class Viewcomicmodal extends Component {
 		} else {
             getOneIssue(comicID, localStorage).then(
                 (res) => {
-                    console.log(res);
-                    this.setState({comic: res});
+                    this.setState({comic: {...res}});
+                    if(!res.picture) {
+                        res.picture = generatePictureFileName(res.title, res.volume, res.issue);
+                    }
+                    this.setState({displayComic: {...res}});
                 }
             );
         }
@@ -60,7 +72,7 @@ class Viewcomicmodal extends Component {
     componentDidMount() {
         window.addEventListener("resize", this.resize.bind(this));
 
-        if(this.state.comic != null) {
+        if(this.props.comicID != 0) {
             this.setState({ isLoading: true });
             // var {jwt} = store.getState().user;
             var localStorage = getTokenFromLocalStorage();
@@ -68,8 +80,16 @@ class Viewcomicmodal extends Component {
 			console.log("token expired");
 			this.props.history.push("/");
 		} else {
-            console.log("Querying series...");
-            getIssuesByTitle(localStorage.jwt, this.state.comic.title).then(
+            console.log("getting issue " + this.props.comicID);
+            getOneIssue(this.props.comicID, localStorage).then(
+                (res) => {
+                    this.setState({comic: {...res}});
+                    if(!res.picture) {
+                        res.picture = generatePictureFileName(res.title, res.volume, res.issue);
+                    }
+                    this.setState({displayComic: {...res}});
+
+            getIssuesByTitle(localStorage.jwt, res.title).then(
                     (res)=>{
                         console.log(res);
                         //if(res.ok) {
@@ -95,6 +115,8 @@ class Viewcomicmodal extends Component {
                         // }
                     }
             );
+                }
+            );
         }
         }
     }
@@ -105,32 +127,71 @@ class Viewcomicmodal extends Component {
     }
 
     onSaveChangesClick = () => {
-        console.log("Save button clicked.");
+        var localStorage = getTokenFromLocalStorage();
+		if(!localStorage) {
+			console.log("token expired");
+			this.props.history.push("/");
+		} else {
+            let comicToUpdate = {...this.state.displayComic};
+            doesPictureExist(pic_url, comicToUpdate.picture).then((res)=>{
+                console.log("image response: ", res);
+                if(!res.ok) {
+                    console.log(res.fullPath + " does not exist. File name will not be saved.");
+                    comicToUpdate.picture = null;
+                }
+
+                console.log("Updating comic: ", comicToUpdate);
+                updateComic(localStorage.jwt, comicToUpdate).then(
+                    (res) => {
+                        if(res.ok) {
+                            alert("Comic updated successfully.");
+                            getOneIssue(this.state.displayComic.comicID, localStorage).then(
+                                (res) => {
+                                    this.setState({comic: {...res}});
+                                    if(!res.picture) {
+                                        res.picture = generatePictureFileName(res.title, res.volume, res.issue);
+                                    }
+                                    this.setState({displayComic: {...res}});
+                                });
+                        } else {
+                            alert("Comic update failed.");
+                        }
+                    }
+                );    
+            });
+        }
     }
 
     onTitleChange = (newTitle) => {
-        var comicCopy = this.state.comic;
+        var comicCopy = this.state.displayComic;
         comicCopy.title = newTitle;
 
-        this.setState({comic: comicCopy});
+        this.setState({displayComic: comicCopy});
     }
 
     onVolumeChange = (newVolume) => {
-        var comicCopy = this.state.comic;
+        var comicCopy = this.state.displayComic;
         comicCopy.volume = newVolume;
 
-        this.setState({comic: comicCopy});
+        this.setState({displayComic: comicCopy});
     }
 
     onIssueChange = (newIssue) => {
-        var comicCopy = this.state.comic;
+        var comicCopy = this.state.displayComic;
         comicCopy.issue = newIssue;
 
-        this.setState({comic: comicCopy});
+        this.setState({displayComic: comicCopy});
+    }
+
+    onPictureChange = (newPic) => {
+        var comicCopy = this.state.displayComic;
+        comicCopy.picture = newPic;
+
+        this.setState({displayComic: comicCopy});
     }
 
     render() {
-        if(this.state.comic == null) {
+        if(this.state.comic == null || this.state.displayComic == null) {
             return(null);
         }
 
@@ -141,7 +202,7 @@ class Viewcomicmodal extends Component {
         else if(this.state.slides.length > 1) {
             carousel = <ItemsCarousel
             infiniteLoop={false}
-            gutter={12}
+            //gutter={12}
             activePosition={'center'}
             chevronWidth={60}
             disableSwipe={false}
@@ -172,7 +233,7 @@ class Viewcomicmodal extends Component {
                             {carousel}
                         </div>
                         <div className="container-50w-right">
-                            <img key={Date.now()} src={pic_url + this.state.comic.picture}
+                            <img key={Date.now()} src={pic_url + this.state.displayComic.picture}
 			    	            alt={this.state.comic.title + " VOL: " + this.state.comic.volume + " #" + this.state.comic.issue}
                                 className="img-center"/>
                         </div>
@@ -191,7 +252,7 @@ class Viewcomicmodal extends Component {
                                         Title
                                     </Form.Label>
                                     <Col sm="10">
-                                        <Form.Control type="text" value={this.state.comic.title} onChange={(e) => {this.onTitleChange(e.target.value)}}/>
+                                        <Form.Control type="text" style={this.state.comic.title === this.state.displayComic.title ? {color:'black'} : {color:'red'}} value={this.state.displayComic.title} onChange={(e) => {this.onTitleChange(e.target.value)}}/>
                                     </Col>
                                 </Form.Group>
                                 <Form.Group as={Row}>
@@ -199,7 +260,7 @@ class Viewcomicmodal extends Component {
                                         Volume
                                     </Form.Label>
                                     <Col sm="2">
-                                        <Form.Control type="number" value={this.state.comic.volume} onChange={(e) => {this.onVolumeChange(e.target.value)}} />
+                                        <Form.Control type="number" style={this.state.comic.volume === this.state.displayComic.volume ? {color:'black'} : {color:'red'}} value={this.state.displayComic.volume} onChange={(e) => {this.onVolumeChange(e.target.value)}} />
                                     </Col>
                                 </Form.Group>
                                 <Form.Group as={Row}>
@@ -207,7 +268,15 @@ class Viewcomicmodal extends Component {
                                         Issue
                                     </Form.Label>
                                     <Col sm="2">
-                                        <Form.Control type="number" step="0.1" value={this.state.comic.issue} onChange={(e) => {this.onIssueChange(e.target.value)}}/>
+                                        <Form.Control type="number" step="0.1" style={this.state.comic.issue === this.state.displayComic.issue ? {color:'black'} : {color:'red'}} value={this.state.displayComic.issue} onChange={(e) => {this.onIssueChange(e.target.value)}}/>
+                                    </Col>
+                                </Form.Group>
+                                <Form.Group as={Row}>
+                                    <Form.Label column sm="2">
+                                        Picture
+                                    </Form.Label>
+                                    <Col sm="10">
+                                        <Form.Control type="text" style={this.state.comic.picture === this.state.displayComic.picture ? {color:'black'} : {color:'red'}} value={this.state.displayComic.picture} onChange={(e) => {this.onPictureChange(e.target.value)}}/>
                                     </Col>
                                 </Form.Group>
                                 <Form.Group as={Row}>
