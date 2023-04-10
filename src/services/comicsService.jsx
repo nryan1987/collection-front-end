@@ -140,6 +140,30 @@ export async function getTitlesAndPublishers(jwt) {
 	return responseJson;
 }
 
+export async function getDistinctTitles(jwt) {
+	console.log("getting distinct titles...");
+	const response = await fetch(host + "/comic/distinctTitles", {
+		method: "GET",
+		headers: {
+			Accept: "application/json",
+			"Content-Type": "application/json",
+			"Authorization": "Bearer " + jwt
+		},
+	})
+	.catch(error => {
+		console.log(error);
+		var res = {
+			ok: false,
+			error: error
+		};
+		return res;
+	});
+	const responseJson = await response.json();
+	console.log("json: ", responseJson);
+
+	return responseJson;
+}
+
 export async function addComicList(jwt, comicArray) {
 	console.log(comicArray);
 	console.log(JSON.stringify(comicArray));
