@@ -11,7 +11,6 @@ import { getTokenFromLocalStorage } from '../store/actions/jwtActions';
 import { pic_url, DEFAULT_FILE_EXTENSION } from '../store/constants';
 import { MAX_TITLE_LENGTH, MAX_INT_FIELD_LENGTH, MAX_PICTURE_NAME_LENGTH, MAX_NOTE_LENGTH, months, grades } from '../store/constants';
 import { mobileCheck, doesPictureExist, parseDateStr } from '../services/Utilities';
-import TitleInput from './inputComponents/TitleInput';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import MenuItem from '@material-ui/core/MenuItem';
