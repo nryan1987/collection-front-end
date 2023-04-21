@@ -417,6 +417,7 @@ class Viewcomicmodal extends Component {
                                             error={this.state.displayComic.title.length > MAX_TITLE_LENGTH}
                                             helperText={"Title must be " + MAX_TITLE_LENGTH + " characters or less."}
                                             InputProps={{
+                                                ...params.InputProps,
                                                 style: {color: this.state.displayComic.title.length > MAX_TITLE_LENGTH ? 'red' :
                                                     this.state.comic.title === this.state.displayComic.title ? 'black' : 'green'}
                                         }}/>
@@ -497,7 +498,14 @@ class Viewcomicmodal extends Component {
                                     freeSolo
                                     options={[...new Set(store.getState().data.publishers.sort((a, b) => a > b ? 1 : -1))]}
                                     renderInput={(params) => (
-                                        <TextField {...params} label="Publisher" margin="normal" variant="outlined"/>
+                                        <TextField {...params}
+                                            label="Publisher"
+                                            margin="normal"
+                                            variant="outlined"
+                                            InputProps={{
+                                                ...params.InputProps,
+                                                style: {color: this.state.comic.publisher === this.state.displayComic.publisher ? 'black' : 'green'}
+                                        }}/>
                                     )}/>
                                 <div>
                                     <TextField
@@ -597,7 +605,7 @@ class Viewcomicmodal extends Component {
                                         margin="normal"
                                         variant="outlined"
                                         InputProps={{
-                                            style: {color: this.state.displayComic.picture.length > MAX_PICTURE_NAME_LENGTH ? 'red' :
+                                            style: {color: !this.state.displayComic.picture || this.state.displayComic.picture.length > MAX_PICTURE_NAME_LENGTH ? 'red' :
                                                 this.state.comic.picture === this.state.displayComic.picture ? 'black' : 'green'}
                                           }}
                                         value={this.state.displayComic.picture}
