@@ -57,7 +57,7 @@ handleSlideChange = (e) => {
         infinite={true}
         keyboardNavigation={true}
         disableButtonsControls={true}
-        onSlideChanged={this.handleSlideChange}
+        // onSlideChanged={this.handleSlideChange}
         //animationType="fadeout"
         disableDotsControls={true}
       />

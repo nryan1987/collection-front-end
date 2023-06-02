@@ -18,12 +18,15 @@ class LoginForm extends Component {
 	}
 
 	componentDidMount() {
-		getHealthCheck().then((resposne) => {
-			if(resposne.ok === true) {
+		this.setState({isLoading: true});
+		getHealthCheck().then((response) => {
+			if(response.ok === true) {
 				this.setState({isHealthy: true});
 			} else {
+				alert(response.error);
 				this.setState({isHealthy: false});
 			}
+			this.setState({isLoading: false});
 		}
 		);
 	}
@@ -53,7 +56,7 @@ class LoginForm extends Component {
 	};
 
 	render() {
-		if(!this.state.isHealthy){
+		if(!this.state.isHealthy && !this.state.isLoading){
 			return (<div>Host is not responding to health checks: {host}</div>);
 		}
 		return (

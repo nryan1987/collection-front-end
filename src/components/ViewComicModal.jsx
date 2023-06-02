@@ -75,12 +75,7 @@ class Viewcomicmodal extends Component {
 		} else {
             getOneIssue(comicID, localStorage).then(
                 (res) => {
-                    let dateObj = parseDateStr(res.publicationDate);
-                    res.year = dateObj.year;
-                    res.month = dateObj.month;
-                    res.day = dateObj.day;
-                    res.pricePaid = parseFloat(res.pricePaid).toFixed(2);
-                    res.value = parseFloat(res.value).toFixed(2);
+                    console.log("click slid issue: ", res);
                     this.setState({comic: {...res}});
                     if(!res.picture) {
                         res.picture = generatePictureFileName(res.title, res.volume, res.issue, res.notes);
@@ -104,19 +99,18 @@ class Viewcomicmodal extends Component {
             console.log("getting issue " + this.props.comicID);
             getOneIssue(this.props.comicID, localStorage).then(
                 (res) => {
-                    let dateObj = parseDateStr(res.publicationDate);
-                    res.year = dateObj.year;
-                    res.month = dateObj.month;
-                    res.day = dateObj.day;
-                    res.pricePaid = parseFloat(res.pricePaid).toFixed(2);
-                    res.value = parseFloat(res.value).toFixed(2);
-                    this.setState({comic: {...res}});
-                    if(!res.picture) {
-                        res.picture = generatePictureFileName(res.title, res.volume, res.issue, res.notes);
-                    }
+                    if(res.ok) {
+                        console.log("initial: ", res);
+                        this.setState({comic: {...res}});
+                        if(!res.picture) {
+                            res.picture = generatePictureFileName(res.title, res.volume, res.issue, res.notes);
+                        }
 
-                    this.setState({displayComic: {...res, deletedNotes:[]}});
-                    this.populateSlides(res.title);
+                        this.setState({displayComic: {...res, deletedNotes:[]}});
+                        this.populateSlides(res.title);
+                    } else {
+                        alert(res.message);
+                    }
                 }
             );
 
@@ -188,21 +182,22 @@ class Viewcomicmodal extends Component {
                 console.log("Updating comic: ", comicToUpdate);
                 updateComic(localStorage.jwt, comicToUpdate).then(
                     (res) => {
+
+                        console.log("Update response: ", res);
                         if(res.ok) {
                             alert(res.message);
 
-                            let dateObj = parseDateStr(res.comicModel.publicationDate);
-                            res.comicModel.year = dateObj.year;
-                            res.comicModel.month = dateObj.month;
-                            res.comicModel.day = dateObj.day;
-                            res.comicModel.pricePaid = parseFloat(res.comicModel.pricePaid).toFixed(2);
-                            res.comicModel.value = parseFloat(res.comicModel.value).toFixed(2);
-
-                            if(this.state.comic.picture !== res.comicModel.picture) {
-                                this.populateSlides(res.comicModel.title);
+                            console.log("Update response: ", res);
+                            if(this.state.comic.picture !== res.picture) {
+                                this.populateSlides(res.title);
                             }
 
-                            this.setState({comic: {...res.comicModel}});
+                            var dispComic = {...res};
+                            if(!dispComic.picture) {
+                                dispComic.picture = generatePictureFileName(res.title, res.volume, res.issue, res.notes);
+                            }
+                            this.setState({comic: {...res}});
+                            this.setState({displayComic: {...dispComic, deletedNotes:[]}});
                             this.setState({unsavedChanges: false});
                         } else {
                             alert("Comic update failed.");
@@ -355,6 +350,7 @@ class Viewcomicmodal extends Component {
     }
 
     render() {
+        console.log(this.state.displayComic);
         if(this.state.comic == null || this.state.displayComic == null) {
             return(null);
         }

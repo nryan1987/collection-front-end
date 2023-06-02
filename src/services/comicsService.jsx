@@ -1,4 +1,5 @@
 import { host } from "../store/constants";
+import { parseDateStr } from '../services/Utilities';
 
 export default async function getHealthCheck() {
 	const response = await fetch(host + "/app/healthCheck", {
@@ -87,11 +88,24 @@ export async function getOneIssue(id, {jwt}) {
 		};
 		return res;
 	});
-	console.log("response: ", response);
 	const responseJson = await response.json();
-	console.log("json: ", responseJson);
 
-	return responseJson;
+	var res = {
+		...responseJson,
+		status: response.status,
+		ok: response.ok
+	};
+
+	if(response.ok) {
+		let dateObj = parseDateStr(res.publicationDate);
+    	res.year = dateObj.year;
+    	res.month = dateObj.month;
+    	res.day = dateObj.day;
+    	res.pricePaid = parseFloat(res.pricePaid).toFixed(2);
+    	res.value = parseFloat(res.value).toFixed(2);
+	}
+
+	return res;
 }
 
 export async function getCollectionStats(jwt) {
@@ -219,11 +233,21 @@ export async function updateComic(jwt, comic) {
 	});
 	const responseJson = await response.json();
 
+	console.log("Update responseJson: ", responseJson);
 	var res = {
 		...responseJson,
 		status: response.status,
 		ok: response.ok
 	};
+
+	if(response.ok) {
+		let dateObj = parseDateStr(res.publicationDate);
+		res.year = dateObj.year;
+		res.month = dateObj.month;
+		res.day = dateObj.day;
+		res.pricePaid = parseFloat(res.pricePaid).toFixed(2);
+		res.value = parseFloat(res.value).toFixed(2);
+	}
 
 	return res;
 }

@@ -7,7 +7,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 import NavigationBar from './NavigationBar';
-import { getAllComicsPaginated, getOneIssue } from '../services/comicsService';
+import { getAllComicsPaginated } from '../services/comicsService';
 import Viewcomicmodal from './ViewComicModal';
 import { getTokenFromLocalStorage } from '../store/actions/jwtActions';
 import { maxMobilePagination } from '../store/constants';

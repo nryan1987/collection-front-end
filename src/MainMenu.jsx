@@ -10,6 +10,8 @@ import { pic_url } from "./store/constants";
 import { getTokenFromLocalStorage } from "./store/actions/jwtActions";
 import "./css/MainMenu.css"
 import { TouchableOpacity } from "react-native-web";
+import getFetchPublishersAction from "./store/actions/dataActions";
+import { connect } from "react-redux";
 
 class MainMenu extends Component {
 	pictureIntervalMS = 2000;
@@ -24,6 +26,28 @@ class MainMenu extends Component {
 
 	componentDidMount() {
 		this.getSlides();
+
+		var localStorage = getTokenFromLocalStorage();
+		if(!localStorage) {
+			this.props.history.push("/");
+		} else {
+			var jwt = localStorage.jwt;
+			console.log("jwt: ", jwt);
+			getFetchPublishersAction(jwt).then((publisherAction) => {
+				if (publisherAction.payload === null) {
+					alert(publisherAction.message);
+				} else {
+					this.props.updatePublishers(publisherAction);
+				}
+			})
+			.catch(
+				(error) => {
+					alert(error);
+				}
+			);
+		}
+
+		
 	}
 
 	getSlides = () => {
@@ -110,4 +134,19 @@ class MainMenu extends Component {
 	}
 }
 
-export default MainMenu;
+const mapStateToProps = (state) => {
+	return {
+		publishers: state.publishers,
+	};
+};
+
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		updatePublishers: (publisherAction) => {
+			dispatch(publisherAction);
+		}
+	};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainMenu);
