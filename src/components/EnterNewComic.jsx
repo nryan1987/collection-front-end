@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import store from "../store/Store";
 import NavigationBar from './NavigationBar';
 import Table from 'react-bootstrap/Table';
 import { Icon } from "rsuite";
