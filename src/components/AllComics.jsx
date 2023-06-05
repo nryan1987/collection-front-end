@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import store from "../store/Store";
 import Table from 'react-bootstrap/Table';
 import Pagination from 'react-bootstrap/Pagination';
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -118,7 +117,7 @@ class AllComics extends Component {
     }
 
     handleOnClickNav = (pageNum) => {
-        if(pageNum > 0 && pageNum <= this.state.numPages && pageNum != this.state.currentPage) {
+        if(pageNum > 0 && pageNum <= this.state.numPages && pageNum !== this.state.currentPage) {
             this.setState({currentPage: pageNum});
             this.updatePagination(pageNum);
             this.updateList(pageNum - 1);

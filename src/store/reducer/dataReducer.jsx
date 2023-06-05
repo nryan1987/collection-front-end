@@ -1,5 +1,3 @@
-import { initialState } from "../constants";
-
 const dataReducer = (state = {}, action) => {
 	console.log("reducer", action);
 

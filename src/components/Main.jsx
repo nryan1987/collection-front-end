@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import LoginForm from "./LoginForm";
 import MainMenu from "../MainMenu";
 import EnterNewComic from "./EnterNewComic";
-import { NavLink, Switch, Route } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import AllComics from "./AllComics";
 
 class Main extends Component {
@@ -23,13 +23,6 @@ class Main extends Component {
 		);
 	}
 }
-
-const Home = () => (
-	<div className="home">
-		<h1>Welcome to my portfolio website</h1>
-		<p> Feel free to browse around and learn more about me.</p>
-	</div>
-);
 
 const About = () => (
 	<div className="about">

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Modal from 'react-bootstrap/Modal';
-import store from "../store/Store";
 import { addComicList } from '../services/comicsService';
 import { getTokenFromLocalStorage } from '../store/actions/jwtActions';
 import "../css/Modal.css"
@@ -46,7 +45,7 @@ class AddComicsModal extends Component {
 
     render() {
         var modalBody = <Modal.Body>{this.state.modalText}</Modal.Body>;
-        if(this.props.comicsList.length > 0 && this.state.errors == false){
+        if(this.props.comicsList.length > 0 && this.state.errors === false){
             this.props.comicsList.sort(function (a, b) {
                 return a.title > b.title ? 1 : a.title < b.title ? -1 : 0
                 || a.volume > b.volume ? 1 : a.volume < b.volume ? -1 : 0 

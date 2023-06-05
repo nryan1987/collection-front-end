@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Navbar, Nav, Dropdown, Icon } from "rsuite";
+import { Navbar, Nav, Icon } from "rsuite";
 import store from "../store/Store";
 import {getCollectionStats} from "../services/comicsService.jsx"
 import { getTokenFromLocalStorage } from "../store/actions/jwtActions";

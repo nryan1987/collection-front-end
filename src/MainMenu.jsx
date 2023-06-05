@@ -3,7 +3,6 @@ import NavigationBar from "./components/NavigationBar";
 import store from "./store/Store";
 import { getLatestIssues } from "./services/comicsService";
 import Viewcomicmodal from './components/ViewComicModal';
-import Carousel from 'react-bootstrap/Carousel';
 import ImageCarousel from "./components/ImageCarousel";
 import { View, Image, Text } from "react-native";
 import { pic_url } from "./store/constants";
