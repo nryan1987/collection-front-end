@@ -55,16 +55,6 @@ jobs:
         filename: release.zip
         # Base path for archive files
         path: ./build/*
-        # Working directory before zipping
-        directory: .
-        # List of excluded files / directories
-        #exclusions: # optional, default is 
-        # List of excluded files / directories with recursive wildcards (only applies on Windows with `zip` type)
-        #recursive_exclusions: # optional, default is 
-        # Provide any custom parameters to the command
-        #custom: # optional, default is 
-        # Tool to use for archiving
-        #type: # optional, default is zip
 
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v3
