@@ -59,7 +59,8 @@ jobs:
         # Filename for archive
         filename: release.zip
         # Base path for archive files
-        path: ./build/*
+        directory: ./build
+        path: ./*
 
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v3
