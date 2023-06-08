@@ -43,6 +43,11 @@ jobs:
         node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
 
+    - run: 'echo "REACT_APP_COMIC_PICS_URL=$PIC_URL" > .env'
+      shell: bash
+      env:
+        PIC_URL: ${{secrets.REACT_APP_COMIC_PICS_URL}}
+        
     - name: npm install, build, and test
       run: |
         npm install
