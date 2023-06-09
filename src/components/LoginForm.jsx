@@ -59,6 +59,8 @@ class LoginForm extends Component {
 		if(!this.state.isHealthy && !this.state.isLoading){
 			return (<div>Host is not responding to health checks: {host}</div>);
 		}
+		var pkg = require('../../package.json');
+
 		return (
 			<div className="mainDiv">
 				<img className="mainImg" src={heroes} />
@@ -107,6 +109,9 @@ class LoginForm extends Component {
 					Forgot <a href="#">password?</a>
 				</p>
 				</form>
+				<div>
+					Version: {pkg.version}
+				</div>
 
 			</div>
 		);
