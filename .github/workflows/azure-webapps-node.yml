@@ -19,7 +19,7 @@
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: [ "test" ]
   workflow_dispatch:
 
 env:
