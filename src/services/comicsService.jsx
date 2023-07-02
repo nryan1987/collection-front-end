@@ -6,7 +6,8 @@ export default async function getHealthCheck() {
 		method: "GET",
 		headers: {
 			Accept: "application/json",
-			"Content-Type": "application/json"
+			"Content-Type": "application/json",
+			"Content-Security-Policy": "upgrade-insecure-requests"
 		},
 	})
 	.catch(error => {
@@ -28,6 +29,7 @@ export async function getLatestIssues(numIssues, jwt) {
 		headers: {
 			Accept: "application/json",
 			"Content-Type": "application/json",
+			"Content-Security-Policy": "upgrade-insecure-requests",
 			"Authorization": "Bearer " + jwt
 		},
 		body: numIssues,
@@ -53,6 +55,7 @@ export async function getIssuesByTitle(jwt, title) {
 		headers: {
 			Accept: "application/json",
 			"Content-Type": "application/json",
+			"Content-Security-Policy": "upgrade-insecure-requests",
 			"Authorization": "Bearer " + jwt
 		},
 		body: title,
@@ -77,6 +80,7 @@ export async function getOneIssue(id, {jwt}) {
 		headers: {
 			Accept: "application/json",
 			"Content-Type": "application/json",
+			"Content-Security-Policy": "upgrade-insecure-requests",
 			"Authorization": "Bearer " + jwt
 		},
 	})
@@ -114,6 +118,7 @@ export async function getCollectionStats(jwt) {
 		headers: {
 			Accept: "application/json",
 			"Content-Type": "application/json",
+			"Content-Security-Policy": "upgrade-insecure-requests",
 			"Authorization": "Bearer " + jwt
 		},
 	})
@@ -137,6 +142,7 @@ export async function getTitlesAndPublishers(jwt) {
 		headers: {
 			Accept: "application/json",
 			"Content-Type": "application/json",
+			"Content-Security-Policy": "upgrade-insecure-requests",
 			"Authorization": "Bearer " + jwt
 		},
 	})
@@ -161,6 +167,7 @@ export async function getDistinctTitles(jwt) {
 		headers: {
 			Accept: "application/json",
 			"Content-Type": "application/json",
+			"Content-Security-Policy": "upgrade-insecure-requests",
 			"Authorization": "Bearer " + jwt
 		},
 	})
@@ -187,6 +194,7 @@ export async function addComicList(jwt, comicArray) {
 		headers: {
 			Accept: "application/json",
 			"Content-Type": "application/json",
+			"Content-Security-Policy": "upgrade-insecure-requests",
 			"Authorization": "Bearer " + jwt
 		},
 		body: JSON.stringify(comicArray),
@@ -219,6 +227,7 @@ export async function updateComic(jwt, comic) {
 		headers: {
 			Accept: "application/json",
 			"Content-Type": "application/json",
+			"Content-Security-Policy": "upgrade-insecure-requests",
 			"Authorization": "Bearer " + jwt
 		},
 		body: JSON.stringify(comic),
@@ -262,6 +271,7 @@ export async function getAllComicsPaginated(jwt, pageNumber, pageSize, searchTer
 		headers: {
 			Accept: "application/json",
 			"Content-Type": "application/json",
+			"Content-Security-Policy": "upgrade-insecure-requests",
 			"Authorization": "Bearer " + jwt
 		},
 		body: searchTerm
