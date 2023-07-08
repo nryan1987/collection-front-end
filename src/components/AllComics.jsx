@@ -48,13 +48,13 @@ class AllComics extends Component {
                     console.log(res);
                     if(res.ok) {
                         let page = [];
-                        res.value.map((c)=>{page.push(<tr key={c.comicID} onClick={() => this.handleComicClicked(c.comicID)}>
+                        res.comics.map((c)=>{page.push(<tr key={c.comicID} onClick={() => this.handleComicClicked(c.comicID)}>
                             <td>{c.comicID}</td>
                             <td style={{ textAlign:"left" }}>{c.title}</td>
                             <td style={{ width:"5%" }}>{c.volume}</td>
                             <td style={{ width:"5%" }}>{c.issue}</td>
-                            <td style={{ width:"8%"}}>{c.publicationDate}</td>
-                            <td>{c.notes}</td>
+                            <td style={{ textAlign:"right", width:"8%"}}>{c.publicationDate}</td>
+                            <td style={{ textAlign:"left" }}>{ c.notes }</td>
                             <td>{c.publisher}</td>
                             <td style={{ width:"5%", textAlign:"right" }}>${c.pricePaid.toFixed(2)}</td>
                             <td style={{ width:"5%", textAlign:"right" }}>${c.value.toFixed(2)}</td>
@@ -69,6 +69,7 @@ class AllComics extends Component {
                     }
                     else {
                         alert(res.message);
+                        this.setState({ isLoading: false });
                     }
                 }
         );
