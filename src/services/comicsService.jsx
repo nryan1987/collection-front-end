@@ -266,7 +266,13 @@ export async function getAllComicsPaginated(jwt, pageNumber, pageSize, searchTer
 	console.log("Page Size: ", pageSize);
 	console.log("Search Term: ", searchTerm);
 
-	const response = await fetch(host + "/comic/getComicsPage/"+pageNumber+"/"+pageSize, {
+	let pageRequest = {
+		pageNumber: pageNumber,
+		pageSize: pageSize,
+		searchTerm: searchTerm
+	};
+
+	const response = await fetch(host + "/comic/getComicsPage", {
 		method: "POST",
 		headers: {
 			Accept: "application/json",
@@ -274,7 +280,7 @@ export async function getAllComicsPaginated(jwt, pageNumber, pageSize, searchTer
 			"Content-Security-Policy": "upgrade-insecure-requests",
 			"Authorization": "Bearer " + jwt
 		},
-		body: searchTerm
+		body: JSON.stringify(pageRequest)
 	})
 	.catch(error => {
 		console.log(error);
