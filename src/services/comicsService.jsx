@@ -50,6 +50,9 @@ export async function getLatestIssues(numIssues, jwt) {
 
 export async function getIssuesByTitle(jwt, title) {
 	console.log("getIssuesByTitle - title: ", title);
+	let request = {
+		title: title
+	};
 	const response = await fetch(host + "/comic/findByTitle", {
 		method: "POST",
 		headers: {
@@ -58,7 +61,7 @@ export async function getIssuesByTitle(jwt, title) {
 			"Content-Security-Policy": "upgrade-insecure-requests",
 			"Authorization": "Bearer " + jwt
 		},
-		body: title,
+		body: JSON.stringify(request)
 	})
 	.catch(error => {
 		console.log(error);
