@@ -88,7 +88,8 @@ class EnterNewComic extends Component {
         comicsCopy.sort(function (a, b) {
             return a.title > b.title ? 1 : a.title < b.title ? -1 : 0
             || a.volume > b.volume ? 1 : a.volume < b.volume ? -1 : 0 
-            || a.issue > b.issue ? 1 : a.issue < b.issue ? -1 : 0;
+            || a.issue > b.issue ? 1 : a.issue < b.issue ? -1 : 0
+            || a.notesSortStr > b.notesSortStr ? 1 : a.notesSortStr < b.notesSortStr ? -1 : 0;
         });
 
         var comicRowCopy = [];
@@ -166,14 +167,12 @@ class EnterNewComic extends Component {
     }
 
     handleNoteChange = (rowId, notesArr) => {
-        console.log("rowId: ", rowId);
-        console.log("notesArr: ", notesArr);
-
         var comicsCopy = [...this.state.comics];
         var index = comicsCopy.findIndex((c) => c.id === rowId);
 
         var comicToUpdate = this.state.comics[index];
         comicToUpdate.notes = notesArr;
+        comicToUpdate.notesSortStr = notesArr.map(({notes}) => notes).join(', ');
         comicsCopy[index] = comicToUpdate;
 
         this.setState({ comics: comicsCopy });

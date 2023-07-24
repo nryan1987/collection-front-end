@@ -134,7 +134,18 @@ class Viewcomicmodal extends Component {
             getIssuesByTitle(localStorage.jwt, queryTitle).then(
                 (res)=>{
                         let slides = [];
-                        res.map((c)=>{slides.push(
+
+                        res.comics.sort(function (a, b) {
+                            a.notesSortStr = a.notes.length > 0 ? a.notes.map(({notes}) => notes).join(', ') : '';
+                            b.notesSortStr = b.notes.length > 0 ? b.notes.map(({notes}) => notes).join(', ') : '';
+
+                            return a.title > b.title ? 1 : a.title < b.title ? -1 : 0
+                            || a.volume > b.volume ? 1 : a.volume < b.volume ? -1 : 0
+                            || a.issue > b.issue ? 1 : a.issue < b.issue ? -1 : 0
+                            || a.notesSortStr > b.notesSortStr ? 1 : a.notesSortStr < b.notesSortStr ? -1 : 0;
+                        });
+
+                        res.comics.map((c)=>{slides.push(
                             <div>
                                 <img key={Date.now()} src={pic_url + c.picture} alt={c.title + " " + c.volume + " " + c.issue}
                                 height='425px' width='300px'/>
@@ -148,7 +159,7 @@ class Viewcomicmodal extends Component {
                         )});
                         this.setState({slides: slides});
                         this.setState({ isLoading: false });
-                        this.setState({ activeItemIndex: res.findIndex(c => c.comicID === this.state.comic.comicID)});
+                        this.setState({ activeItemIndex: res.comics.findIndex(c => c.comicID === this.state.comic.comicID)});
                 }
             );
         }
