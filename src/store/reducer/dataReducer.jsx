@@ -1,6 +1,4 @@
 const dataReducer = (state = {}, action) => {
-	console.log("reducer", action);
-
 	switch (action.type) {
 		case "UPDATE_PUBLISHERS":
 			return Object.assign({}, state, { publishers: action.payload });
