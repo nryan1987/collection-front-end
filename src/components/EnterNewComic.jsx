@@ -86,10 +86,10 @@ class EnterNewComic extends Component {
     handleSortListClick = () => {
         var comicsCopy = [...this.state.comics];
         comicsCopy.sort(function (a, b) {
-            return a.title > b.title ? 1 : a.title < b.title ? -1 : 0
+            return a.title.toUpperCase() > b.title.toUpperCase() ? 1 : a.title.toUpperCase() < b.title.toUpperCase() ? -1 : 0
             || a.volume > b.volume ? 1 : a.volume < b.volume ? -1 : 0 
             || a.issue > b.issue ? 1 : a.issue < b.issue ? -1 : 0
-            || a.notesSortStr > b.notesSortStr ? 1 : a.notesSortStr < b.notesSortStr ? -1 : 0;
+            || a.notesSortStr.toUpperCase() > b.notesSortStr.toUpperCase() ? 1 : a.notesSortStr.toUpperCase() < b.notesSortStr.toUpperCase() ? -1 : 0;
         });
 
         var comicRowCopy = [];
