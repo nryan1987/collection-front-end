@@ -85,22 +85,28 @@ class EnterNewComic extends Component {
 
     handleSortListClick = () => {
         var comicsCopy = [...this.state.comics];
-        comicsCopy.sort(function (a, b) {
-            return a.title.toUpperCase() > b.title.toUpperCase() ? 1 : a.title.toUpperCase() < b.title.toUpperCase() ? -1 : 0
-            || a.volume > b.volume ? 1 : a.volume < b.volume ? -1 : 0 
-            || a.issue > b.issue ? 1 : a.issue < b.issue ? -1 : 0
-            || a.notesSortStr.toUpperCase() > b.notesSortStr.toUpperCase() ? 1 : a.notesSortStr.toUpperCase() < b.notesSortStr.toUpperCase() ? -1 : 0;
-        });
+        try {
+            comicsCopy.sort(function (a, b) {
+                return a.title.toUpperCase() > b.title.toUpperCase() ? 1 : a.title.toUpperCase() < b.title.toUpperCase() ? -1 : 0
+                || a.volume > b.volume ? 1 : a.volume < b.volume ? -1 : 0 
+                || a.issue > b.issue ? 1 : a.issue < b.issue ? -1 : 0
+                || a.notesSortStr.toUpperCase() > b.notesSortStr.toUpperCase() ? 1 : a.notesSortStr.toUpperCase() < b.notesSortStr.toUpperCase() ? -1 : 0;
+            });
 
-        var comicRowCopy = [];
-        var index;
-        comicsCopy.map((c) => {
-            index = this.state.comicRows.findIndex((cr) => parseInt(cr.key, 10) === c.id);
-            comicRowCopy.push(this.state.comicRows[index]);
-        });
+            var comicRowCopy = [];
+            var index;
+            comicsCopy.map((c) => {
+                index = this.state.comicRows.findIndex((cr) => parseInt(cr.key, 10) === c.id);
+                comicRowCopy.push(this.state.comicRows[index]);
+            });
 
-        this.setState({ comics: comicsCopy });
-        this.setState({ comicRows: comicRowCopy });
+            this.setState({ comics: comicsCopy });
+            this.setState({ comicRows: comicRowCopy });
+        } catch(e) {
+            alert("Error sorting comics");
+            console.log(e);
+            console.log(comicsCopy);
+        }
     }
 
     handleTitleChange = (rowId, title, isValid) => {
