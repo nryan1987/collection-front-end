@@ -9,7 +9,7 @@ import NavigationBar from './NavigationBar';
 import { getAllComicsPaginated } from '../services/comicsService';
 import Viewcomicmodal from './ViewComicModal';
 import { getTokenFromLocalStorage } from '../store/actions/jwtActions';
-import { maxMobilePagination } from '../store/constants';
+import { maxMobilePagination, maxPagination } from '../store/constants';
 import { mobileCheck } from '../services/Utilities';
 import "../css/Components.css"
 
@@ -79,7 +79,7 @@ class AllComics extends Component {
     updatePagination = (activePageNum) => {
         let items = [];
         let numPages = Math.ceil(this.state.numPages);
-        let numPagesToDisplay = mobileCheck() ? maxMobilePagination : numPages;
+        let numPagesToDisplay = mobileCheck() ? maxMobilePagination : maxPagination;
 
         items.push(<Pagination.First onClick={(e)=>{this.handleOnClickNav(1)}}/>);
         items.push(<Pagination.Prev onClick={(e)=>{this.handleOnClickNav(this.state.currentPage - 1)}}/>);

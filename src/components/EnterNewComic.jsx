@@ -37,15 +37,15 @@ class EnterNewComic extends Component {
         console.log("handleAddClick");
         var rows = [...this.state.comicRows];
         rows.push(<NewComicRow key={this.state.currentIndex} id={this.state.currentIndex}
-             titlesList={this.state.titlePublishers}
-             onDelete={this.handleRemoveClick}
-             onTitleChange={this.handleTitleChange}
-             onPublisherChange={this.handlePublisherChange}
-             onVolumeChange={this.handleVolumeChange}
-             onIssueChange={this.handleIssueChange}
-             onPricePaidChange={this.handlePricePaidChange}
-             onNoteChange={this.handleNoteChange}
-             />);
+            titlePubMap={this.state.titlePublishers}
+            onDelete={this.handleRemoveClick}
+            onTitleChange={this.handleTitleChange}
+            onPublisherChange={this.handlePublisherChange}
+            onVolumeChange={this.handleVolumeChange}
+            onIssueChange={this.handleIssueChange}
+            onPricePaidChange={this.handlePricePaidChange}
+            onNoteChange={this.handleNoteChange}
+        />);
 
         var comics = this.state.comics;
         comics.push({id: this.state.currentIndex,
@@ -90,7 +90,7 @@ class EnterNewComic extends Component {
                 return a.title.toUpperCase() > b.title.toUpperCase() ? 1 : a.title.toUpperCase() < b.title.toUpperCase() ? -1 : 0
                 || a.volume > b.volume ? 1 : a.volume < b.volume ? -1 : 0 
                 || a.issue > b.issue ? 1 : a.issue < b.issue ? -1 : 0
-                || a.notesSortStr.toUpperCase() > b.notesSortStr.toUpperCase() ? 1 : a.notesSortStr.toUpperCase() < b.notesSortStr.toUpperCase() ? -1 : 0;
+                || a.notesSortStr === undefined ? "" : a.notesSortStr.toUpperCase() > b.notesSortStr === undefined ? "" : b.notesSortStr.toUpperCase() ? 1 : a.notesSortStr === undefined ? "" : a.notesSortStr.toUpperCase() < b.notesSortStr === undefined ? "" : b.notesSortStr.toUpperCase() ? -1 : 0;
             });
 
             var comicRowCopy = [];
