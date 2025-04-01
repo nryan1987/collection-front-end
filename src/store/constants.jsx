@@ -1,7 +1,8 @@
 export const host = process.env.REACT_APP_BACKEND_URL != null ? process.env.REACT_APP_BACKEND_URL : "http://localhost:8080";
-export const pic_url = process.env.REACT_APP_COMIC_PICS_URL != null ? process.env.REACT_APP_COMIC_PICS_URL : "http://kandor/images/Comic Pictures/";
+export const pic_url = process.env.REACT_APP_COMIC_PICS_URL != null ? process.env.REACT_APP_COMIC_PICS_URL : "http://kandor/images/Comic_Pictures/";
 export const maxMobilePagination = 5;
 export const maxPagination = 50;
+
 
 export const initialState = {
 	username: "",
