@@ -12,34 +12,43 @@ class NewComicRow extends Component {
 
         this.state = {
             title:"", 
+            titleInput:"",
             volume:0, 
             issueNum:0, 
             notes:[], 
             publisher:"", 
             publisherInput:"", 
-            pricePaid:0.0
+            pricePaid:0.0,
+            titleList:this.props.titlePubMap.titleData.flatMap(t => t.title).sort((a, b) => a.toUpperCase() > b.toUpperCase() ? 1 : -1),
+            publisherList:this.props.titlePubMap.publishers.sort((a, b) => a.toUpperCase() > b.toUpperCase() ? 1 : -1)
         }
 	}
 
-    handleTitleSelect = (e) => {
-        console.log("handleTitleSelect:" + this.props.id + "-" + e.target.value);
-        console.log(this.state);
+    getPublishersForTitle(title) {
+        const entry = this.props.titlePubMap.titleData.filter(item => item.title.toUpperCase() === title);
+        console.log("entry", entry);
+        return entry.length === 0 ? undefined : entry[0];
+    }
 
-        const pub = this.props.titlesList.filter(comic => comic.title.toUpperCase() === e.target.value.toUpperCase());
-        if(pub.length !== 0) {
-            console.log(pub);
+    handleTitleSelectEvent = (e) => {
+        this.handleTitleSelect(e.target.value)
+    }
 
-            this.setState({title: pub[0].title});
-            this.setState({publisher: pub[0].publisher});
-            this.setState({volume: pub[0].volume});
-            this.props.onTitleChange(this.props.id, pub[0].title, pub[0].title.length <= MAX_TITLE_LENGTH);
-            this.props.onPublisherChange(this.props.id, pub[0].publisher, this.validatePublisher(pub[0].publisher));
-            this.props.onVolumeChange(this.props.id, pub[0].volume);
+    handleTitleSelect = (title) => {
+        console.log("handleTitleSelect:" + this.props.id + "-" + title);
+
+        const titleData = this.getPublishersForTitle(title.toUpperCase())
+        if(titleData !== undefined) {
+            this.setState({title: title});
+            this.setState({publisher: titleData.publishers[0]});
+            this.setState({volume: titleData.volume});
+            this.props.onTitleChange(this.props.id, title, title.length <= MAX_TITLE_LENGTH);
+            this.props.onPublisherChange(this.props.id, titleData.publishers[0], this.validatePublisher(titleData.publishers[0]));
+            this.props.onVolumeChange(this.props.id, titleData.volume);
         }
         else {
-            this.setState({title: e.target.value});
-            this.props.onTitleChange(this.props.id, e.target.value, e.target.value.length <= MAX_TITLE_LENGTH);
-            //this.props.onPublisherChange(this.props.id, "");
+            this.setState({title: title});
+            this.props.onTitleChange(this.props.id, title, title.length <= MAX_TITLE_LENGTH);
         }
     }
 
@@ -87,7 +96,16 @@ class NewComicRow extends Component {
     }
 
     validatePublisher = (publisher) => {
+        console.log("Validating publisher: " + publisher);
         return publisher !== null && publisher !== undefined && publisher.length > 0;
+    }
+
+    isNewTitle = () => {
+        return this.state.title !== null && 
+                this.state.title !== undefined && 
+                this.state.title.length > 0 && 
+                !this.state.titleList.includes(this.state.title);
+
     }
 
     render() {
@@ -96,13 +114,12 @@ class NewComicRow extends Component {
                                     <Icon icon="minus" />Remove
                             </button>;
 
-        const titles = [...new Set(this.props.titlesList.sort((a, b) => a.title > b.title ? 1 : -1).map((a) => a.title))];
-        const publishers = [...new Set(this.props.titlesList.sort((a, b) => a.publisher > b.publisher ? 1 : -1).map((a) => a.publisher))];
+        console.log(this.props)
 
         return (
             <tr>
                 <td>{removeButton}</td>
-                <td style={{ backgroundColor: this.state.title.length > MAX_TITLE_LENGTH ? 'lightcoral': ''}}>
+                <td style={{ backgroundColor: this.state.title.length > MAX_TITLE_LENGTH ? 'lightcoral': this.isNewTitle() ? 'lightgreen':''}}>
                     <Tooltip
                         title={"Title length must be " + MAX_TITLE_LENGTH + " characters or less."}
                         placement="top"
@@ -110,9 +127,18 @@ class NewComicRow extends Component {
                         open={this.state.title.length > MAX_TITLE_LENGTH}
                     >        
                         <Autocomplete
-                            onSelect={this.handleTitleSelect}
+                            onSelect={this.handleTitleSelectEvent}
+                            inputValue={this.state.titleInput}
+                            onChange={(event, newValue) => {
+                                this.setState({title: newValue});
+                                this.handleTitleSelect(newValue);
+                              }}
+                            onInputChange={(event, newInputValue) => {
+                                this.setState({titleInput: newInputValue});
+                                this.handleTitleSelect(newInputValue);
+                          }}
                             freeSolo
-                            options={titles}
+                            options={this.state.titleList}
                             renderInput={(params) => (
                                 <TextField {...params} label="Title" margin="normal" variant="outlined" />
                             )}
@@ -122,12 +148,12 @@ class NewComicRow extends Component {
                 <td><TextField label="Volume" style={{width:"100%"}} value={this.state.volume} margin="normal" variant="outlined" onChange={this.handleVolumeChange} /></td>
                 <td><TextField label="Issue" style={{width:"100%"}} margin="normal" variant="outlined" onChange={this.handleIssueChange} /></td>
                 <td><TextField label="Notes" style={{width:"100%"}} margin="normal" variant="outlined" onChange={this.handleNoteChange} /></td>
-                <td style={{ backgroundColor: !this.validatePublisher(this.state.publisher) ? 'lightcoral': ''}}>
+                <td style={{ backgroundColor: !this.validatePublisher(this.state.publisher) && !this.validatePublisher(this.state.publisherInput) ? 'lightcoral': ''}}>
                 <Tooltip
                         title={"Publisher must be present."}
                         placement="top"
                         arrow
-                        open={!this.validatePublisher(this.state.publisher)}
+                        open={!this.validatePublisher(this.state.publisher) && !this.validatePublisher(this.state.publisherInput)}
                     >
                     <Autocomplete
                         onSelect={this.handlePublisherSelect}
@@ -142,7 +168,7 @@ class NewComicRow extends Component {
                             this.setState({publisherInput: newInputValue});
                             this.props.onPublisherChange(this.props.id, newInputValue, this.validatePublisher(newInputValue));
                           }}
-                        options={publishers}
+                        options={this.state.publisherList}
                         renderInput={(params) => (
                             <TextField {...params} label="Publisher" margin="normal" variant="outlined" />
                         )}
