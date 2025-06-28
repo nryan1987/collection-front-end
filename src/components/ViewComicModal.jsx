@@ -15,6 +15,7 @@ import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import MenuItem from '@material-ui/core/MenuItem';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import defaultCover from "../images/defaultCover.png"
 
 function generatePictureFileName (title, volume, issue, notes) {
     var fileName;
@@ -148,7 +149,12 @@ class Viewcomicmodal extends Component {
                         res.comics.map((c)=>{slides.push(
                             <div>
                                 <img key={Date.now()} src={pic_url + c.picture} alt={c.title + " " + c.volume + " " + c.issue}
-                                height='425px' width='300px'/>
+                                height='425px' width='300px'
+                                onError={(e)=>{
+                                    e.target.src=defaultCover
+                                }}
+                                onClick={() => this.clickSlide(c.comicID)}
+                                />
                                 <br>
                                 </br>
                                 <text style={{color: 'blue'}}
@@ -406,6 +412,10 @@ class Viewcomicmodal extends Component {
                         <div className="container-50w-right">
                             <img key={Date.now()} src={pic_url + this.state.displayComic.picture}
 			    	            alt={this.state.comic.title + " VOL: " + this.state.comic.volume + " #" + this.state.comic.issue}
+                                onError={(e)=>{
+                                    e.target.src=defaultCover
+                                    e.target.width=500
+                                }}
                                 className="img-center"/>
                         </div>
                         <div className="container-50w-left">
