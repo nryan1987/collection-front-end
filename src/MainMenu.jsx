@@ -11,6 +11,7 @@ import "./css/MainMenu.css"
 import { TouchableOpacity } from "react-native-web";
 import getFetchPublishersAction from "./store/actions/dataActions";
 import { connect } from "react-redux";
+import defaultCover from "../src/images/defaultCover.png"
 
 class MainMenu extends Component {
 	pictureIntervalMS = 2000;
@@ -77,6 +78,7 @@ class MainMenu extends Component {
 						  aspectRatio: 1
                       	}}
                       	source={pic_url + comic.picture}
+						defaultSource={defaultCover}
                     	/>
                     	<Text>{comic.title + " VOL: " + comic.volume + " #" + comic.issue}</Text>
 						</TouchableOpacity>
