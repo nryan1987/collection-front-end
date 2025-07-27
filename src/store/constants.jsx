@@ -12,7 +12,7 @@ export const initialState = {
 };
 
 //DB Constants
-export const MAX_TITLE_LENGTH=60;
+export const MAX_TITLE_LENGTH=65;
 export const MAX_PICTURE_NAME_LENGTH=55;
 export const MAX_NOTE_LENGTH=60;
 export const MAX_INT_FIELD_LENGTH=999999999;
